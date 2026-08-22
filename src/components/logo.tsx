@@ -1,31 +1,62 @@
 import Link from "next/link";
+import { brandFont } from "@/app/fonts";
 
-export function LogoMark({ size = 34 }: { size?: number }) {
+const BRAND_ORANGE = "#F97316";
+
+// Brand badge: rounded picture-frame with stacked "Empty! Corner!" wordmark,
+// in brand orange with the chunky Titan One lettering (matches the uploaded logo style).
+// Orange reads well on both cream (storefront) and dark (admin) backgrounds.
+export function LogoMark({
+  width = 44,
+  dark = false,
+}: {
+  width?: number;
+  dark?: boolean;
+}) {
+  const height = Math.round(width * 0.72);
   return (
     <svg
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
+      width={width}
+      height={height}
+      viewBox="0 0 96 69"
       fill="none"
       aria-hidden
       className="shrink-0"
     >
-      <rect width="32" height="32" rx="9" fill="#221B15" />
-      <path
-        d="M7.5 16.5 L16 8 L24.5 16.5"
-        stroke="#FAF6F0"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      <rect
+        x="4"
+        y="4"
+        width="88"
+        height="61"
+        rx="11"
+        fill="none"
+        stroke={BRAND_ORANGE}
+        strokeWidth="5.5"
       />
-      <path
-        d="M11 15v9h10v-9"
-        stroke="#FAF6F0"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="16" cy="19" r="2.6" fill="#B4552D" />
+      <g transform="rotate(-1.5 48 34)">
+        <text
+          x="49"
+          y="30"
+          textAnchor="middle"
+          fontFamily={brandFont.style.fontFamily}
+          fontSize="19"
+          letterSpacing="1"
+          fill={BRAND_ORANGE}
+        >
+          Empty!
+        </text>
+        <text
+          x="47"
+          y="50"
+          textAnchor="middle"
+          fontFamily={brandFont.style.fontFamily}
+          fontSize="19"
+          letterSpacing="1"
+          fill={BRAND_ORANGE}
+        >
+          Corner!
+        </text>
+      </g>
     </svg>
   );
 }
@@ -37,19 +68,21 @@ export default function Logo({
   dark?: boolean;
   compact?: boolean;
 }) {
+  const width = compact ? 38 : 46;
   return (
     <Link
       href="/"
-      className="flex items-center gap-2.5 transition hover:opacity-80"
-      aria-label="HOMENEST — home"
+      className="inline-flex items-center gap-2.5 transition hover:opacity-85"
+      aria-label="Empty Corner — home"
     >
-      {!compact && <LogoMark />}
+      <LogoMark width={width} />
       <span
-        className={`font-display tracking-wide ${compact ? "text-xl" : "text-2xl"} ${
-          dark ? "text-cream" : "text-ink"
-        }`}
+        aria-hidden
+        className={`flex flex-col leading-[0.95] tracking-tight ${compact ? "text-sm" : "text-base"}`}
+        style={{ fontFamily: brandFont.style.fontFamily, color: BRAND_ORANGE }}
       >
-        HOME<span className="text-clay">NEST</span>
+        <span>Empty!</span>
+        <span>Corner!</span>
       </span>
     </Link>
   );

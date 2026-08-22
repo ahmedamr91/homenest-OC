@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import "./globals.css";
+import { brandFont } from "./fonts";
 import { CartProvider } from "@/components/cart-context";
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={brandFont.className}>
       <body>
         <CartProvider>{children}</CartProvider>
       </body>
