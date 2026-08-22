@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  products    Product[]
+}
+
+model Product {
+  id           Int            @id @default(autoincrement())
+  name         String
+  slug         String         @unique
+  description  String
+  price        Float
+  comparePrice Float?
+  stock        Int            @default(0)
+  featured     Boolean        @default(false)
+  published    Boolean        @default(true)
+  imageUrl     String?
+  categoryId   Int
+  category     Category       @relation(fields: [categoryId], references: [id])
+  colors       ProductColor[]
+  orderItems   OrderItem[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([categoryId])
+}
+
+model ProductColor {
+  id        Int     @id @default(autoincrement())
+  name      String
+  hex       String
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id           Int         @id @default(autoincrement())
+  number       String      @unique
+  customerName String
+  email        String
+  phone        String
+  address      String
+  city         String
+  notes        String?
+  subtotal     Float
+  shipping     Float
+  total        Float
+  status       String      @default("PENDING")
+  items        OrderItem[]
+  createdAt    DateTime    @default(now())
+
+  @@index([status])
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  name      String
+  colorName String
+  colorHex  String
+  price     Float
+  quantity  Int
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+}
+
+model CustomRequest {
+  id           Int                 @id @default(autoincrement())
+  reference    String              @unique
+  customerName String
+  email        String
+  phone        String
+  title        String
+  description  String
+  budget       Float?
+  imagePath    String?
+  colors       CustomRequestColor[]
+  status       String              @default("NEW")
+  adminNotes   String?
+  createdAt    DateTime            @default(now())
+
+  @@index([status])
+}
+
+model CustomRequestColor {
+  id               Int           @id @default(autoincrement())
+  hex              String
+  customRequestId  Int
+  customRequest    CustomRequest @relation(fields: [customRequestId], references: [id], onDelete: Cascade)
+}

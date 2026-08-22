@@ -1,0 +1,85 @@
+import { z } from "zod";
+
+export const HEX_RE = /^#[0-9a-fA-F]{6}$/;
+
+export const loginSchema = z.object({
+  email: z.string().trim().email().max(200),
+  password: z.string().min(1).max(200),
+});
+
+export const colorSchema = z.object({
+  name: z.string().trim().min(1).max(50),
+  hex: z.string().trim().regex(HEX_RE, "Invalid color hex"),
+});
+
+export const productSchema = z.object({
+  name: z.string().trim().min(2).max(150),
+  description: z.string().trim().min(10).max(5000),
+  price: z.number().positive().max(100000),
+  comparePrice: z.number().positive().max(100000).nullable().optional(),
+  stock: z.number().int().min(0).max(1000000),
+  featured: z.boolean().optional().default(false),
+  published: z.boolean().optional().default(true),
+  imageUrl: z
+    .string()
+    .trim()
+    .url()
+    .max(1000)
+    .nullable()
+    .optional()
+    .or(z.literal("").transform(() => null)),
+  categoryId: z.number().int().positive(),
+  colors: z.array(colorSchema).max(12).default([]),
+});
+
+export const categorySchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  description: z.string().trim().max(500).nullable().optional(),
+});
+
+export const checkoutSchema = z.object({
+  customerName: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(200),
+  phone: z.string().trim().min(6).max(30).regex(/^[+0-9\s()-]+$/, "Invalid phone"),
+  address: z.string().trim().min(5).max(300),
+  city: z.string().trim().min(2).max(100),
+  notes: z.string().trim().max(1000).nullable().optional(),
+  items: z
+    .array(
+      z.object({
+        productId: z.number().int().positive(),
+        colorId: z.number().int().positive().nullable().optional(),
+        quantity: z.number().int().min(1).max(99),
+      })
+    )
+    .min(1)
+    .max(50),
+});
+
+export const orderStatusSchema = z.object({
+  status: z.enum(["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"]),
+});
+
+export const customRequestSchema = z.object({
+  customerName: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(200),
+  phone: z.string().trim().min(6).max(30).regex(/^[+0-9\s()-]+$/, "Invalid phone"),
+  title: z.string().trim().min(2).max(150),
+  description: z.string().trim().min(10).max(3000),
+  budget: z.number().positive().max(1000000).nullable().optional(),
+  colors: z.array(z.string().trim().regex(HEX_RE, "Invalid color")).min(1).max(6),
+});
+
+export const customStatusSchema = z.object({
+  status: z.enum(["NEW", "REVIEWING", "QUOTED", "IN_PRODUCTION", "COMPLETED", "REJECTED"]),
+});
+
+export const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+export const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // under Vercel's serverless body limit
+
+export function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
