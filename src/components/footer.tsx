@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Logo from "./logo";
 
 export default function Footer() {
@@ -39,7 +39,7 @@ export default function Footer() {
         <div>
           <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-ink/50">Good to know</h3>
           <ul className="space-y-2.5 text-sm text-ink/70">
-            <li>Free shipping over $75</li>
+            <li>Free shipping over EGP 3,000</li>
             <li>Cash on delivery available</li>
             <li>30-day easy returns</li>
             <li>Secure checkout</li>

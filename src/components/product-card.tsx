@@ -10,12 +10,27 @@ export type CardProduct = {
   comparePrice: number | null;
   stock: number;
   imageUrl: string | null;
+  images?: { id: number; url: string }[];
   colors: { id: number; name: string; hex: string }[];
+  ratingAvg?: number | null;
+  ratingCount?: number;
 };
+
+function Stars({ value }: { value: number }) {
+  return (
+    <span className="text-[11px] tracking-tight" aria-label={`${value.toFixed(1)} out of 5`}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <span key={i} className={i <= Math.round(value) ? "text-amber-500" : "text-ink/20"}>
+          ★
+        </span>
+      ))}
+    </span>
+  );
+}
 
 export default function ProductCard({ product }: { product: CardProduct }) {
   const hexes = product.colors.map((c) => c.hex);
-  const art = product.imageUrl || productArt(hexes, product.id);
+  const cover = product.images?.[0]?.url || product.imageUrl || productArt(hexes, product.id);
   const onSale =
     product.comparePrice != null && product.comparePrice > product.price;
 
@@ -27,7 +42,7 @@ export default function ProductCard({ product }: { product: CardProduct }) {
       <div className="relative aspect-square overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={art}
+          src={cover}
           alt={product.name}
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           loading="lazy"
@@ -47,6 +62,12 @@ export default function ProductCard({ product }: { product: CardProduct }) {
         <h3 className="font-display text-lg leading-snug text-ink group-hover:text-clay">
           {product.name}
         </h3>
+        {product.ratingCount ? (
+          <div className="mt-1 flex items-center gap-1.5">
+            <Stars value={product.ratingAvg ?? 0} />
+            <span className="text-[11px] text-ink/50">({product.ratingCount})</span>
+          </div>
+        ) : null}
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-base font-semibold text-ink">

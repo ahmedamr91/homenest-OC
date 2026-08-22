@@ -15,8 +15,8 @@ export const colorSchema = z.object({
 export const productSchema = z.object({
   name: z.string().trim().min(2).max(150),
   description: z.string().trim().min(10).max(5000),
-  price: z.number().positive().max(100000),
-  comparePrice: z.number().positive().max(100000).nullable().optional(),
+  price: z.number().positive().max(10000000),
+  comparePrice: z.number().positive().max(10000000).nullable().optional(),
   stock: z.number().int().min(0).max(1000000),
   featured: z.boolean().optional().default(false),
   published: z.boolean().optional().default(true),
@@ -30,6 +30,12 @@ export const productSchema = z.object({
     .or(z.literal("").transform(() => null)),
   categoryId: z.number().int().positive(),
   colors: z.array(colorSchema).max(12).default([]),
+  images: z
+    .array(
+      z.string().trim().url().max(1000)
+    )
+    .max(8)
+    .default([]),
 });
 
 export const categorySchema = z.object({
@@ -44,6 +50,7 @@ export const checkoutSchema = z.object({
   address: z.string().trim().min(5).max(300),
   city: z.string().trim().min(2).max(100),
   notes: z.string().trim().max(1000).nullable().optional(),
+  discountCode: z.string().trim().max(40).nullable().optional(),
   items: z
     .array(
       z.object({
@@ -55,6 +62,30 @@ export const checkoutSchema = z.object({
     .min(1)
     .max(50),
 });
+
+export const reviewSchema = z.object({
+  productId: z.number().int().positive(),
+  name: z.string().trim().min(2).max(80),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().trim().max(1000).nullable().optional(),
+});
+
+export const discountCreateSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .min(3)
+    .max(40)
+    .regex(/^[A-Za-z0-9_-]+$/, "Letters, numbers, - and _ only")
+    .transform((s) => s.toUpperCase()),
+  type: z.enum(["PERCENT", "FIXED"]),
+  value: z.number().positive().max(1000000),
+  minOrder: z.number().min(0).nullable().optional(),
+  maxUses: z.number().int().positive().max(1000000).nullable().optional(),
+  expiresAt: z.string().datetime({ offset: true }).nullable().optional(),
+});
+
+export const discountToggleSchema = z.object({ active: z.boolean() });
 
 export const orderStatusSchema = z.object({
   status: z.enum(["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"]),

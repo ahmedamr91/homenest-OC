@@ -30,11 +30,47 @@ model Product {
   categoryId   Int
   category     Category       @relation(fields: [categoryId], references: [id])
   colors       ProductColor[]
+  images       ProductImage[]
+  reviews      Review[]
   orderItems   OrderItem[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 
   @@index([categoryId])
+}
+
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  url       String
+  sort      Int     @default(0)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  rating    Int
+  comment   String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([productId, approved])
+}
+
+model DiscountCode {
+  id        Int       @id @default(autoincrement())
+  code      String    @unique
+  type      String // PERCENT | FIXED
+  value     Float
+  minOrder  Float?
+  maxUses   Int?
+  usedCount Int       @default(0)
+  active    Boolean   @default(true)
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
 }
 
 model ProductColor {
@@ -55,6 +91,8 @@ model Order {
   city         String
   notes        String?
   subtotal     Float
+  discountCode String?
+  discount     Float       @default(0)
   shipping     Float
   total        Float
   status       String      @default("PENDING")
@@ -83,6 +121,12 @@ model Admin {
   passwordHash String
   name         String
   createdAt    DateTime @default(now())
+}
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }
 
 model CustomRequest {

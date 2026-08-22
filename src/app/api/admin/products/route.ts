@@ -8,7 +8,7 @@ export async function GET() {
   if ("error" in guard) return guard.error;
 
   const products = await db.product.findMany({
-    include: { colors: true, category: true },
+    include: { colors: true, images: true, category: true },
     orderBy: { createdAt: "desc" },
   });
   return NextResponse.json({ products });
@@ -49,8 +49,9 @@ export async function POST(req: Request) {
         imageUrl: d.imageUrl ?? null,
         categoryId: d.categoryId,
         colors: { create: d.colors },
+        images: { create: d.images.map((url, i) => ({ url, sort: i })) },
       },
-      include: { colors: true },
+      include: { colors: true, images: true },
     });
     return NextResponse.json({ ok: true, id: product.id }, { status: 201 });
   } catch {

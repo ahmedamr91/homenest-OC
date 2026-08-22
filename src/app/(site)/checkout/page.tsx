@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/cart-context";
-import { formatMoney, shippingFor } from "@/lib/utils";
+import { formatMoney } from "@/lib/utils";
+import { EG_CITIES, getCityFee } from "@/lib/shipping";
 
 export default function CheckoutPage() {
   const { items, subtotal, clear, ready } = useCart();
@@ -12,8 +13,41 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const shipping = shippingFor(subtotal);
-  const total = subtotal + shipping;
+  const [city, setCity] = useState<string>("Cairo");
+  const [couponInput, setCouponInput] = useState("");
+  const [coupon, setCoupon] = useState<{ code: string; discount: number; message: string } | null>(null);
+  const [couponMsg, setCouponMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [checkingCoupon, setCheckingCoupon] = useState(false);
+
+  const discount = coupon?.discount ?? 0;
+  const discountedSubtotal = Math.max(0, subtotal - discount);
+  const shipping = items.length ? getCityFee(city, discountedSubtotal) : 0;
+  const total = discountedSubtotal + shipping;
+
+  async function applyCoupon() {
+    if (!couponInput.trim()) return;
+    setCheckingCoupon(true);
+    setCouponMsg(null);
+    try {
+      const res = await fetch("/api/discounts/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponInput.trim(), subtotal }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setCoupon({ code: data.code, discount: data.discount, message: data.message });
+        setCouponMsg({ ok: true, text: `${data.message} You save ${formatMoney(data.discount)}.` });
+      } else {
+        setCoupon(null);
+        setCouponMsg({ ok: false, text: data.message || "Invalid code." });
+      }
+    } catch {
+      setCouponMsg({ ok: false, text: "Could not check the code. Try again." });
+    } finally {
+      setCheckingCoupon(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,8 +63,9 @@ export default function CheckoutPage() {
           email: fd.get("email"),
           phone: fd.get("phone"),
           address: fd.get("address"),
-          city: fd.get("city"),
+          city,
           notes: fd.get("notes") || null,
+          discountCode: coupon?.code ?? null,
           items: items.map((i) => ({
             productId: i.productId,
             colorId: i.colorId,
@@ -39,9 +74,7 @@ export default function CheckoutPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Something went wrong. Please try again.");
-      }
+      if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.");
       clear();
       router.push(`/order/${data.number}`);
     } catch (err) {
@@ -83,27 +116,42 @@ export default function CheckoutPage() {
                 <input id="email" name="email" type="email" required maxLength={200} className="input" autoComplete="email" />
               </div>
               <div>
-                <label htmlFor="phone" className="label">Phone *</label>
+                <label htmlFor="phone" className="label">Phone / WhatsApp *</label>
                 <input id="phone" name="phone" required pattern="[+0-9\s()-]{6,}" title="Valid phone number" className="input" autoComplete="tel" placeholder="+20 100 000 0000" />
-              </div>
-              <div className="sm:col-span-2">
-                <label htmlFor="address" className="label">Street address *</label>
-                <input id="address" name="address" required minLength={5} maxLength={300} className="input" autoComplete="street-address" />
               </div>
               <div>
                 <label htmlFor="city" className="label">City *</label>
-                <input id="city" name="city" required minLength={2} maxLength={100} className="input" autoComplete="address-level2" />
+                <select
+                  id="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="input cursor-pointer"
+                >
+                  {EG_CITIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="address" className="label">Street address *</label>
+                <input id="address" name="address" required minLength={5} maxLength={300} className="input" autoComplete="street-address" />
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="notes" className="label">Order notes (optional)</label>
                 <textarea id="notes" name="notes" rows={3} maxLength={1000} className="input resize-none" placeholder="Delivery instructions, landmark, preferred time…" />
               </div>
             </div>
+            <p className="mt-3 rounded-lg bg-sand/70 px-3 py-2 text-xs text-ink/60">
+              🚚 Shipping to <strong>{city}</strong>:{" "}
+              {shipping === 0 ? "FREE" : formatMoney(shipping)} · free everywhere on orders over {formatMoney(3000)}
+            </p>
           </section>
 
           <section className="card p-6">
-            <h2 className="font-display text-xl">Payment</h2>
-            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-clay bg-clay/5 p-4">
+            <h2 className="mb-4 font-display text-xl">Payment</h2>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-clay bg-clay/5 p-4">
               <input type="radio" checked readOnly className="mt-1 accent-[#B4552D]" />
               <span>
                 <span className="block font-semibold">Cash on delivery</span>
@@ -118,7 +166,7 @@ export default function CheckoutPage() {
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <div className="card p-6">
             <h2 className="font-display text-xl">Your order</h2>
-            <ul className="mt-4 max-h-64 space-y-3 overflow-auto pr-1 text-sm">
+            <ul className="mt-4 max-h-56 space-y-3 overflow-auto pr-1 text-sm">
               {items.map((i) => (
                 <li key={`${i.productId}-${i.colorId}`} className="flex justify-between gap-3">
                   <span className="min-w-0 truncate text-ink/70">
@@ -135,19 +183,51 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
+
+            {/* Promo code */}
+            <div className="mt-5 border-t border-dashed border-ink/15 pt-4">
+              <label htmlFor="promo" className="label">Promo code</label>
+              <div className="flex gap-2">
+                <input
+                  id="promo"
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                  placeholder="e.g. WELCOME10"
+                  className="input !py-2 font-mono uppercase"
+                  maxLength={40}
+                />
+                <button
+                  type="button"
+                  onClick={applyCoupon}
+                  disabled={checkingCoupon || !couponInput.trim()}
+                  className="shrink-0 rounded-xl bg-ink px-4 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-clay disabled:opacity-40"
+                >
+                  {checkingCoupon ? "…" : "Apply"}
+                </button>
+              </div>
+              {couponMsg && (
+                <p className={`mt-2 text-xs font-medium ${couponMsg.ok ? "text-emerald-600" : "text-red-500"}`}>
+                  {couponMsg.ok ? "✓ " : "✕ "}
+                  {couponMsg.text}
+                </p>
+              )}
+            </div>
+
             <dl className="mt-5 space-y-3 border-t border-ink/10 pt-4 text-sm">
               <div className="flex justify-between">
                 <dt className="text-ink/60">Subtotal</dt>
                 <dd className="font-semibold">{formatMoney(subtotal)}</dd>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-emerald-600">
+                  <dt>Discount ({coupon?.code})</dt>
+                  <dd className="font-semibold">−{formatMoney(discount)}</dd>
+                </div>
+              )}
               <div className="flex justify-between">
-                <dt className="text-ink/60">Shipping</dt>
+                <dt className="text-ink/60">Shipping to {city}</dt>
                 <dd className="font-semibold">
-                  {shipping === 0 ? (
-                    <span className="text-emerald-600">FREE</span>
-                  ) : (
-                    formatMoney(shipping)
-                  )}
+                  {shipping === 0 ? <span className="text-emerald-600">FREE</span> : formatMoney(shipping)}
                 </dd>
               </div>
               <div className="flex justify-between border-t border-ink/10 pt-3 text-base">
@@ -157,7 +237,7 @@ export default function CheckoutPage() {
             </dl>
 
             {error && (
-              <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+              <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                 {error}
               </p>
             )}

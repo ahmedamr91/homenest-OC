@@ -2,6 +2,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
 import { productArt } from "@/lib/art";
+import NewsletterForm from "./newsletter-form";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,7 @@ export default async function HomePage() {
   const [featured, categories, newArrivals] = await Promise.all([
     db.product.findMany({
       where: { published: true, featured: true },
-      include: { colors: true },
+      include: { colors: true, images: { orderBy: { sort: "asc" }, take: 1 } },
       take: 4,
       orderBy: { createdAt: "desc" },
     }),
@@ -20,11 +21,32 @@ export default async function HomePage() {
     }),
     db.product.findMany({
       where: { published: true },
-      include: { colors: true },
+      include: { colors: true, images: { orderBy: { sort: "asc" }, take: 1 } },
       take: 8,
       orderBy: { createdAt: "desc" },
     }),
   ]);
+
+  const ratings = await db.review.groupBy({
+    by: ["productId"],
+    where: {
+      approved: true,
+      productId: { in: [...featured, ...newArrivals].map((p) => p.id) },
+    },
+    _avg: { rating: true },
+    _count: true,
+  });
+
+  const withRating = (p: (typeof featured)[number]) => {
+    const r = ratings.find((x) => x.productId === p.id);
+    return {
+      ...p,
+      imageUrl: p.imageUrl ?? null,
+      images: p.images,
+      ratingAvg: r?._avg.rating ?? null,
+      ratingCount: r?._count ?? 0,
+    };
+  };
 
   return (
     <div>
@@ -48,8 +70,8 @@ export default async function HomePage() {
                 Shop the collection
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </Link>
-              <Link href="/shop?sort=price-asc" className="btn-secondary">
-                Best prices
+              <Link href="/custom" className="btn-secondary">
+                Make it yours
               </Link>
             </div>
           </div>
@@ -67,7 +89,7 @@ export default async function HomePage() {
                   <div className="aspect-square overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={p.imageUrl || productArt(p.colors.map((c) => c.hex), p.id)}
+                      src={p.images[0]?.url || p.imageUrl || productArt(p.colors.map((c) => c.hex), p.id)}
                       alt={p.name}
                       className="h-full w-full object-cover"
                     />
@@ -119,7 +141,7 @@ export default async function HomePage() {
             </div>
             <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
               {featured.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <ProductCard key={p.id} product={withRating(p)} />
               ))}
             </div>
           </div>
@@ -129,8 +151,8 @@ export default async function HomePage() {
       {/* Value props */}
       <section className="container-page grid gap-6 py-14 sm:grid-cols-3">
         {[
-          ["Free shipping", "On every order over $75, delivered to your door."],
-          ["Cash on delivery", "Pay only when your order arrives at your door."],
+          ["Free shipping", "On every order over EGP 3,000, delivered to your door."],
+          ["Cash on delivery", "Pay only when your order arrives, across Egypt."],
           ["30-day returns", "Changed your mind? Send it back within 30 days."],
         ].map(([title, desc]) => (
           <div key={title} className="rounded-xl2 bg-white p-6 shadow-card">
@@ -153,7 +175,7 @@ export default async function HomePage() {
         </div>
         <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
           {newArrivals.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <ProductCard key={p.id} product={withRating(p)} />
           ))}
         </div>
       </section>
@@ -195,21 +217,7 @@ export default async function HomePage() {
           <p className="mx-auto mt-3 max-w-md text-sm text-cream/70">
             Join our list for early access to new collections and color drops.
           </p>
-          <form
-            action="/shop"
-            method="get"
-            className="mx-auto mt-7 flex max-w-md flex-col gap-3 sm:flex-row"
-          >
-            <input
-              type="email"
-              required
-              placeholder="Your email address"
-              className="w-full rounded-full bg-cream/10 px-5 py-3 text-sm text-cream placeholder:text-cream/50 focus:border-clay focus:outline-none"
-            />
-            <button type="submit" className="btn-primary shrink-0 !px-6 !bg-clay hover:!bg-clay-dark">
-              Subscribe
-            </button>
-          </form>
+          <NewsletterForm />
         </div>
       </section>
     </div>

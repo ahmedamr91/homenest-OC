@@ -8,6 +8,7 @@
     "start": "next start",
     "postinstall": "prisma generate",
     "setup": "prisma db push && node scripts/seed.mjs",
+    "check": "node scripts/check-env.mjs",
     "db:local": "node scripts/db-provider.mjs sqlite && prisma db push && prisma generate",
     "db:cloud": "node scripts/db-provider.mjs postgresql && prisma generate"
   },
