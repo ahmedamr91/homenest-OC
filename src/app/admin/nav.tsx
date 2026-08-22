@@ -11,6 +11,7 @@ const links = [
   { href: "/admin/discounts", label: "Discounts", icon: "M7 7h.01M7 3h5a2 2 0 011.4.6l7.1 7.1a2 2 0 010 2.8l-5 5a2 2 0 01-2.8 0L3.6 11.4A2 2 0 013 10V5a2 2 0 012-2z" },
   { href: "/admin/reviews", label: "Reviews", icon: "M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1z" },
   { href: "/admin/custom", label: "Custom Orders", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" },
+  { href: "/admin/infra", label: "Infrastructure", icon: "M4 6a2 2 0 114 0v12a2 2 0 11-4 0V6zM14 8a2 2 0 114 0v10a2 2 0 11-4 0V8z" },
 ];
 
 export default function AdminNav() {

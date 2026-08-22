@@ -1,14 +1,22 @@
-// Email service — gracefully no-ops when RESEND_API_KEY is not configured.
+﻿// Email service — gracefully no-ops when RESEND_API_KEY is not configured.
+import { db } from "./db";
 import { ADMIN_EMAIL } from "./site-config";
 
-type MailInput = { to: string; subject: string; html: string };
+type MailInput = { to: string; subject: string; html: string; type: string };
 
 const FROM = "HOMENEST <onboarding@resend.dev>";
 
-async function send({ to, subject, html }: MailInput): Promise<boolean> {
+async function logEmail(to: string, subject: string, type: string, delivered: boolean) {
+  try {
+    await db.emailLog.create({ data: { to, subject, type, delivered } });
+  } catch {}
+}
+
+async function send({ to, subject, html, type }: MailInput): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     console.log(`[email skipped — no RESEND_API_KEY] to=${to} subject="${subject}"`);
+    void logEmail(to, subject, type, false);
     return false;
   }
   try {
@@ -22,11 +30,14 @@ async function send({ to, subject, html }: MailInput): Promise<boolean> {
     });
     if (!res.ok) {
       console.error("[email failed]", await res.text());
+      void logEmail(to, subject, type, false);
       return false;
     }
+    void logEmail(to, subject, type, true);
     return true;
   } catch (e) {
     console.error("[email error]", e);
+    void logEmail(to, subject, type, false);
     return false;
   }
 }
@@ -54,6 +65,7 @@ export async function sendOrderConfirmation(o: {
     )
     .join("");
   return send({
+    type: "order_confirmation",
     to: o.email,
     subject: `Order ${o.number} received — HOMENEST`,
     html: wrap(
@@ -84,6 +96,7 @@ export async function sendNewOrderAlert(o: {
        </div>`
     : "";
   return send({
+    type: "admin_alert",
     to: process.env.ALERTS_TO || ADMIN_EMAIL,
     subject: `🔔 New order ${o.number} — EGP ${o.total.toFixed(2)}`,
     html: wrap(
@@ -101,6 +114,7 @@ export async function sendNewOrderAlert(o: {
 
 export async function sendWelcomeEmail(email: string) {
   return send({
+    type: "welcome",
     to: email,
     subject: "Welcome to HOMENEST — your 10% inside",
     html: wrap(
@@ -115,6 +129,7 @@ export async function sendWelcomeEmail(email: string) {
 export async function sendLowStockDigest(items: { name: string; stock: number }[]) {
   if (!items.length) return false;
   return send({
+    type: "low_stock",
     to: process.env.ALERTS_TO || ADMIN_EMAIL,
     subject: `⚠ ${items.length} product(s) running low`,
     html: wrap(

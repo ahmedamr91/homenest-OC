@@ -129,6 +129,17 @@ model Subscriber {
   createdAt DateTime @default(now())
 }
 
+model EmailLog {
+  id        Int      @id @default(autoincrement())
+  to        String
+  subject   String
+  type      String // order_confirmation | admin_alert | welcome | low_stock
+  delivered Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
 model CustomRequest {
   id           Int                 @id @default(autoincrement())
   reference    String              @unique
