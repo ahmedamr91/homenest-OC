@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 // Brand badge: rounded picture-frame with stacked "Empty! Corner!" wordmark,
-// drawn in the site palette (ink / cream / clay) instead of the original red/yellow.
+// drawn in the site palette (ink / cream / clay).
 export function LogoMark({
-  width = 96,
+  width = 44,
   dark = false,
 }: {
   width?: number;
@@ -21,7 +21,6 @@ export function LogoMark({
       aria-hidden
       className="shrink-0"
     >
-      {/* picture-frame badge */}
       <rect
         x="4"
         y="4"
@@ -32,7 +31,6 @@ export function LogoMark({
         stroke={ink}
         strokeWidth="4.5"
       />
-      {/* slight tilt for the playful hand-drawn feel */}
       <g transform="rotate(-1.5 48 34)">
         <text
           x="49"
@@ -56,7 +54,7 @@ export function LogoMark({
           letterSpacing="0.5"
           fill={ink}
         >
-          Corner<tspan fill={clay}>.</tspan>
+          Corner<tspan fill={clay}>!</tspan>
         </text>
       </g>
     </svg>
@@ -70,13 +68,28 @@ export default function Logo({
   dark?: boolean;
   compact?: boolean;
 }) {
+  const width = compact ? 38 : 46;
   return (
     <Link
       href="/"
-      className="inline-flex items-center transition hover:opacity-85"
+      className="inline-flex items-center gap-2.5 transition hover:opacity-85"
       aria-label="Empty Corner — home"
     >
-      <LogoMark width={compact ? 78 : 104} dark={dark} />
+      <LogoMark width={width} dark={dark} />
+      <span
+        aria-hidden
+        className={`flex flex-col font-black leading-[0.95] tracking-tight ${
+          dark ? "text-cream" : "text-ink"
+        } ${compact ? "text-sm" : "text-base"}`}
+        style={{ fontFamily: "'Arial Black', 'Segoe UI', Arial, sans-serif" }}
+      >
+        <span>
+          Empty<span className="text-clay">!</span>
+        </span>
+        <span>
+          Corner<span className="text-clay">!</span>
+        </span>
+      </span>
     </Link>
   );
 }
