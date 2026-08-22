@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="690" viewBox="0 0 96 69">
+  <rect width="96" height="69" fill="#ffffff"/>
+  <rect x="4" y="4" width="88" height="61" rx="11" fill="none" stroke="#1A1A1A" stroke-width="5.5"/>
+  <g transform="rotate(-1.5 48 34)">
+    <text x="49" y="30" text-anchor="middle" font-family="'Arial Black','Segoe UI',Arial,sans-serif" font-weight="900" font-size="19" letter-spacing="1" fill="#1A1A1A">Empty!</text>
+    <text x="47" y="50" text-anchor="middle" font-family="'Arial Black','Segoe UI',Arial,sans-serif" font-weight="900" font-size="19" letter-spacing="1" fill="#1A1A1A">Corner!</text>
+  </g>
+</svg>

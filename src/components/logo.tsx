@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 // Brand badge: rounded picture-frame with stacked "Empty! Corner!" wordmark,
-// drawn in the site palette (ink / cream / clay).
+// in near-black (matches the official logo). Cream variant for dark surfaces.
 export function LogoMark({
   width = 44,
   dark = false,
@@ -9,8 +9,7 @@ export function LogoMark({
   width?: number;
   dark?: boolean;
 }) {
-  const ink = dark ? "#FAF6F0" : "#221B15";
-  const clay = "#B4552D";
+  const ink = dark ? "#FAF6F0" : "#1A1A1A";
   const height = Math.round(width * 0.72);
   return (
     <svg
@@ -29,7 +28,7 @@ export function LogoMark({
         rx="11"
         fill="none"
         stroke={ink}
-        strokeWidth="4.5"
+        strokeWidth="5.5"
       />
       <g transform="rotate(-1.5 48 34)">
         <text
@@ -38,11 +37,11 @@ export function LogoMark({
           textAnchor="middle"
           fontFamily="'Arial Black', 'Segoe UI', Arial, sans-serif"
           fontWeight="900"
-          fontSize="17"
-          letterSpacing="0.5"
+          fontSize="19"
+          letterSpacing="1"
           fill={ink}
         >
-          Empty<tspan fill={clay}>!</tspan>
+          Empty!
         </text>
         <text
           x="47"
@@ -50,11 +49,11 @@ export function LogoMark({
           textAnchor="middle"
           fontFamily="'Arial Black', 'Segoe UI', Arial, sans-serif"
           fontWeight="900"
-          fontSize="17"
-          letterSpacing="0.5"
+          fontSize="19"
+          letterSpacing="1"
           fill={ink}
         >
-          Corner<tspan fill={clay}>!</tspan>
+          Corner!
         </text>
       </g>
     </svg>
@@ -79,16 +78,12 @@ export default function Logo({
       <span
         aria-hidden
         className={`flex flex-col font-black leading-[0.95] tracking-tight ${
-          dark ? "text-cream" : "text-ink"
+          dark ? "text-cream" : "text-[#1A1A1A]"
         } ${compact ? "text-sm" : "text-base"}`}
         style={{ fontFamily: "'Arial Black', 'Segoe UI', Arial, sans-serif" }}
       >
-        <span>
-          Empty<span className="text-clay">!</span>
-        </span>
-        <span>
-          Corner<span className="text-clay">!</span>
-        </span>
+        <span>Empty!</span>
+        <span>Corner!</span>
       </span>
     </Link>
   );
