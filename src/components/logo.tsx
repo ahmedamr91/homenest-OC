@@ -5,11 +5,13 @@ import Link from "next/link";
 export default function Logo({
   dark = false,
   compact = false,
+  height,
 }: {
   dark?: boolean;
   compact?: boolean;
+  height?: number;
 }) {
-  const height = compact ? 30 : 40;
+  const finalHeight = height ?? (compact ? 30 : 40);
   return (
     <Link
       href="/"
@@ -21,7 +23,7 @@ export default function Logo({
         src={dark ? "/brand-logo-cream.png" : "/brand-logo.png"}
         alt="Empty Corner"
         className="w-auto"
-        style={{ height }}
+        style={{ height: finalHeight }}
       />
     </Link>
   );

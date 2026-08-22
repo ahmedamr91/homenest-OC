@@ -34,7 +34,7 @@ export default function Header() {
       </div>
       <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream/90 backdrop-blur">
         <div className="container-page flex h-16 items-center justify-between gap-4">
-          <Logo />
+          <Logo height={56} />
 
           <nav className="hidden md:flex items-center gap-7">
             {nav.map((n) => (
