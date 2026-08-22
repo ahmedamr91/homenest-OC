@@ -1,0 +1,9 @@
+
+> maison-home-accessories@1.0.0 start
+> next start
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3215
+
+ ✓ Starting...
+ ✓ Ready in 340ms
