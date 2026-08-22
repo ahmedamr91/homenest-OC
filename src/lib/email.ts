@@ -1,10 +1,10 @@
-﻿// Email service — gracefully no-ops when RESEND_API_KEY is not configured.
+// Email service — gracefully no-ops when RESEND_API_KEY is not configured.
 import { db } from "./db";
 import { ADMIN_EMAIL } from "./site-config";
 
 type MailInput = { to: string; subject: string; html: string; type: string };
 
-const FROM = "HOMENEST <onboarding@resend.dev>";
+const FROM = "Empty Corner <onboarding@resend.dev>";
 
 async function logEmail(to: string, subject: string, type: string, delivered: boolean) {
   try {
@@ -44,10 +44,10 @@ async function send({ to, subject, html, type }: MailInput): Promise<boolean> {
 
 const wrap = (title: string, body: string) => `
 <div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;background:#FAF6F0;padding:24px;border-radius:16px">
-  <div style="font-size:22px;font-weight:bold;color:#221B15;margin-bottom:4px">HOME<span style="color:#B4552D">NEST</span></div>
+  <div style="display:inline-block;border:3px solid #221B15;border-radius:10px;padding:8px 16px;font-weight:900;font-size:18px;color:#221B15;margin-bottom:4px">EMPTY<span style="color:#B4552D">!</span> CORNER<span style="color:#B4552D">!</span></div>
   <h2 style="color:#221B15;margin-top:12px">${title}</h2>
   ${body}
-  <p style="color:#8a837b;font-size:12px;margin-top:28px">HOMENEST — Modern Home Accessories</p>
+  <p style="color:#8a837b;font-size:12px;margin-top:28px">Empty Corner — Modern Home Accessories</p>
 </div>`;
 
 export async function sendOrderConfirmation(o: {
@@ -67,7 +67,7 @@ export async function sendOrderConfirmation(o: {
   return send({
     type: "order_confirmation",
     to: o.email,
-    subject: `Order ${o.number} received — HOMENEST`,
+    subject: `Order ${o.number} received — Empty Corner`,
     html: wrap(
       `Thank you, ${o.customerName}! 🏡`,
       `<p>Your order has been received and is being prepared.</p>
@@ -116,7 +116,7 @@ export async function sendWelcomeEmail(email: string) {
   return send({
     type: "welcome",
     to: email,
-    subject: "Welcome to HOMENEST — your 10% inside",
+    subject: "Welcome to Empty Corner — your 10% inside",
     html: wrap(
       "Welcome to the family! 🏡",
       `<p>You're on the list for early access to new collections and color drops.</p>

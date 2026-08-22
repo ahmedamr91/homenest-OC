@@ -20,7 +20,7 @@ export default async function OrderPage({
 
   const wa = waLink(
     order.phone,
-    `Hi HOMENEST! I just placed order ${order.number} (${order.items.reduce(
+    `Hi Empty Corner! I just placed order ${order.number} (${order.items.reduce(
       (s, i) => s + i.quantity,
       0
     )} items, EGP ${order.total.toFixed(0)} cash on delivery). Confirming my order 👋`

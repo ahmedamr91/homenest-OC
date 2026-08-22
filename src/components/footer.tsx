@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Logo from "./logo";
 
 export default function Footer() {
@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-ink/10 py-5 text-center text-xs text-ink/50">
-        © {new Date().getFullYear()} HOMENEST Home Accessories. All rights reserved.
+        © {new Date().getFullYear()} Empty Corner Home Accessories. All rights reserved.
       </div>
     </footer>
   );

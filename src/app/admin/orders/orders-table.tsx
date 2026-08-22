@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -185,7 +185,7 @@ export default function OrdersTable({ initial }: { initial: Order[] }) {
                   <a
                     href={waLink(
                       o.phone,
-                      `Hello ${o.customerName}! Your HOMENEST order ${o.number} (${formatMoney(
+                      `Hello ${o.customerName}! Your Empty Corner order ${o.number} (${formatMoney(
                         o.total
                       )} cash on delivery) is being prepared. We'll confirm delivery soon 🏡`
                     )}

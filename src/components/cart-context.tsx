@@ -34,7 +34,7 @@ type CartContextType = {
 };
 
 const CartContext = createContext<CartContextType | null>(null);
-const STORAGE_KEY = "homenest_cart_v1";
+const STORAGE_KEY = "emptycorner_cart_v1";
 
 const sameLine = (a: CartItem, productId: number, colorId: number | null) =>
   a.productId === productId && a.colorId === colorId;

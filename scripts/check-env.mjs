@@ -20,7 +20,7 @@ let ok = true;
 const fail = (msg) => { console.error("  ✗ " + msg); ok = false; };
 const pass = (msg) => console.log("  ✓ " + msg);
 
-console.log("\nHOMENEST config check\n─────────────────────");
+console.log("\nEmpty Corner config check\n─────────────────────");
 
 // DATABASE_URL
 const db = env.DATABASE_URL || "";
