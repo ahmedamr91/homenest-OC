@@ -19,7 +19,7 @@ export async function GET(_req: Request, { params }: Params) {
 
   const product = await db.product.findUnique({
     where: { id },
-    include: { colors: true, category: true },
+    include: { colors: true, images: { orderBy: { sort: "asc" } }, category: true },
   });
   if (!product)
     return NextResponse.json({ error: "Not found." }, { status: 404 });
@@ -49,6 +49,7 @@ export async function PUT(req: Request, { params }: Params) {
   try {
     await db.$transaction(async (tx) => {
       await tx.productColor.deleteMany({ where: { productId: id } });
+      await tx.productImage.deleteMany({ where: { productId: id } });
       await tx.product.update({
         where: { id },
         data: {
@@ -62,6 +63,7 @@ export async function PUT(req: Request, { params }: Params) {
           imageUrl: d.imageUrl ?? null,
           categoryId: d.categoryId,
           colors: { create: d.colors },
+          images: { create: d.images.map((url, i) => ({ url, sort: i })) },
         },
       });
     });

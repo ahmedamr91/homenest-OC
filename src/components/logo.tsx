@@ -1,11 +1,7 @@
 import Link from "next/link";
-import { brandFont } from "@/app/fonts";
-
-const BRAND_ORANGE = "#F97316";
 
 // Brand badge: rounded picture-frame with stacked "Empty! Corner!" wordmark,
-// in brand orange with the chunky Titan One lettering (matches the uploaded logo style).
-// Orange reads well on both cream (storefront) and dark (admin) backgrounds.
+// drawn in the site palette (ink / cream / clay).
 export function LogoMark({
   width = 44,
   dark = false,
@@ -13,6 +9,8 @@ export function LogoMark({
   width?: number;
   dark?: boolean;
 }) {
+  const ink = dark ? "#FAF6F0" : "#221B15";
+  const clay = "#B4552D";
   const height = Math.round(width * 0.72);
   return (
     <svg
@@ -30,31 +28,33 @@ export function LogoMark({
         height="61"
         rx="11"
         fill="none"
-        stroke={BRAND_ORANGE}
-        strokeWidth="5.5"
+        stroke={ink}
+        strokeWidth="4.5"
       />
       <g transform="rotate(-1.5 48 34)">
         <text
           x="49"
           y="30"
           textAnchor="middle"
-          fontFamily={brandFont.style.fontFamily}
-          fontSize="19"
-          letterSpacing="1"
-          fill={BRAND_ORANGE}
+          fontFamily="'Arial Black', 'Segoe UI', Arial, sans-serif"
+          fontWeight="900"
+          fontSize="17"
+          letterSpacing="0.5"
+          fill={ink}
         >
-          Empty!
+          Empty<tspan fill={clay}>!</tspan>
         </text>
         <text
           x="47"
           y="50"
           textAnchor="middle"
-          fontFamily={brandFont.style.fontFamily}
-          fontSize="19"
-          letterSpacing="1"
-          fill={BRAND_ORANGE}
+          fontFamily="'Arial Black', 'Segoe UI', Arial, sans-serif"
+          fontWeight="900"
+          fontSize="17"
+          letterSpacing="0.5"
+          fill={ink}
         >
-          Corner!
+          Corner<tspan fill={clay}>!</tspan>
         </text>
       </g>
     </svg>
@@ -75,14 +75,20 @@ export default function Logo({
       className="inline-flex items-center gap-2.5 transition hover:opacity-85"
       aria-label="Empty Corner — home"
     >
-      <LogoMark width={width} />
+      <LogoMark width={width} dark={dark} />
       <span
         aria-hidden
-        className={`flex flex-col leading-[0.95] tracking-tight ${compact ? "text-sm" : "text-base"}`}
-        style={{ fontFamily: brandFont.style.fontFamily, color: BRAND_ORANGE }}
+        className={`flex flex-col font-black leading-[0.95] tracking-tight ${
+          dark ? "text-cream" : "text-ink"
+        } ${compact ? "text-sm" : "text-base"}`}
+        style={{ fontFamily: "'Arial Black', 'Segoe UI', Arial, sans-serif" }}
       >
-        <span>Empty!</span>
-        <span>Corner!</span>
+        <span>
+          Empty<span className="text-clay">!</span>
+        </span>
+        <span>
+          Corner<span className="text-clay">!</span>
+        </span>
       </span>
     </Link>
   );

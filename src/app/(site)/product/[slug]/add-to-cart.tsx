@@ -14,12 +14,24 @@ type Props = {
     price: number;
     stock: number;
     imageUrl: string | null;
+    images: { id: number; url: string }[];
     colors: Color[];
   };
-  artBase: string | null;
 };
 
-export default function AddToCart({ product, artBase }: Props) {
+function Stars({ value }: { value: number }) {
+  return (
+    <span aria-hidden>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <span key={i} className={i <= Math.round(value) ? "text-amber-500" : "text-ink/20"}>
+          ★
+        </span>
+      ))}
+    </span>
+  );
+}
+
+export default function AddToCart({ product }: Props) {
   const { add } = useCart();
   const router = useRouter();
   const [selectedColor, setSelectedColor] = useState<Color>(
@@ -27,14 +39,10 @@ export default function AddToCart({ product, artBase }: Props) {
   );
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
 
-  const art =
-    artBase ||
-    (product.imageUrl
-      ? product.imageUrl
-      : productArt([selectedColor.hex], product.id));
-
-  const preview = artBase ? productArt([selectedColor.hex], product.id) : art;
+  const hasPhotos = product.images.length > 0;
+  const tintedArt = productArt([selectedColor.hex], product.id);
 
   const outOfStock = product.stock === 0;
 
@@ -63,34 +71,40 @@ export default function AddToCart({ product, artBase }: Props) {
       <div className="overflow-hidden rounded-xl2 bg-white shadow-card">
         <div className="relative aspect-square">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview} alt={product.name} className="h-full w-full object-cover transition-all duration-500" />
+          <img
+            src={hasPhotos ? product.images[activeImg]?.url : tintedArt}
+            alt={product.name}
+            className={`h-full w-full object-cover ${hasPhotos ? "" : "transition-all duration-500"}`}
+          />
+          {!hasPhotos && selectedColor.name && (
+            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-ink backdrop-blur">
+              Shown in {selectedColor.name}
+            </span>
+          )}
         </div>
-        {product.colors.length > 1 && (
-          <div className="flex gap-2 border-t border-ink/10 p-4">
-            {product.colors.map((c) => (
+        {hasPhotos && product.images.length > 1 && (
+          <div className="flex gap-2 overflow-x-auto border-t border-ink/10 p-4">
+            {product.images.map((img, i) => (
               <button
-                key={c.id}
-                onClick={() => setSelectedColor(c)}
-                aria-label={`View ${c.name}`}
-                className={`h-12 w-12 rounded-xl border-2 transition ${
-                  selectedColor.id === c.id
-                    ? "border-clay ring-2 ring-clay/30"
-                    : "border-ink/10 hover:border-ink/30"
+                key={img.id}
+                onClick={() => setActiveImg(i)}
+                aria-label={`Photo ${i + 1}`}
+                className={`h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition ${
+                  activeImg === i ? "border-clay ring-2 ring-clay/30" : "border-ink/10 hover:border-ink/30"
                 }`}
-                style={{ backgroundColor: c.hex }}
-              />
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img.url} alt="" className="h-full w-full object-cover" />
+              </button>
             ))}
           </div>
         )}
       </div>
 
-      {product.colors.length > 0 && (
+      {product.colors.length > 1 && (
         <div>
-          <div className="mb-2 flex items-baseline justify-between">
-            <span className="label !mb-0">Available colors</span>
-            <span className="text-sm font-semibold text-clay">{selectedColor.name}</span>
-          </div>
-          <div className="flex flex-wrap gap-2.5">
+          <span className="label">Available colors</span>
+          <div className="flex flex-wrap gap-2">
             {product.colors.map((c) => (
               <button
                 key={c.id}
@@ -135,11 +149,7 @@ export default function AddToCart({ product, artBase }: Props) {
           </button>
         </div>
 
-        <button
-          onClick={() => handleAdd(false)}
-          disabled={outOfStock}
-          className="btn-primary flex-1"
-        >
+        <button onClick={() => handleAdd(false)} disabled={outOfStock} className="btn-primary flex-1">
           {outOfStock ? "Out of stock" : added ? "✓ Added to cart" : "Add to cart"}
         </button>
       </div>

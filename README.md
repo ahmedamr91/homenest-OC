@@ -1,4 +1,4 @@
-# HOMENEST — Modern Home Accessories Store
+# EMPTY CORNER — Modern Home Accessories Store
 
 A full-stack e-commerce website for home accessories, built with Next.js 14,
 Prisma + PostgreSQL (Neon), Tailwind CSS and UploadThing cloud storage.
@@ -54,8 +54,8 @@ npm start
 ## Admin panel
 
 - URL: `/admin/login` (or click "Admin Panel" in the footer)
-- Email: `admin@maison.local`
-- Password: `Admin@12345`
+- Email: see `ADMIN_EMAIL` in your `.env`
+- Password: see `ADMIN_PASSWORD` in your `.env`
 
 > Change these in `.env` (`ADMIN_EMAIL`, `ADMIN_PASSWORD`) and re-run
 > `npm run setup` to reset the admin account with a new password.

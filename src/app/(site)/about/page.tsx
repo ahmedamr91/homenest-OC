@@ -8,7 +8,7 @@ export default function AboutPage() {
       <h1 className="font-display text-5xl text-ink">Our story</h1>
       <div className="mt-8 space-y-5 leading-relaxed text-ink/70">
         <p>
-          MAISON began with a simple belief: the objects we live with should be
+          Empty Corner began with a simple belief: the objects we live with should be
           as considered as the spaces they occupy. We curate home accessories —
           lighting, textiles, vases, mirrors and storage — that bring warmth,
           texture and quiet character into everyday rooms.

@@ -4,6 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { formatMoney, ORDER_STATUSES, STATUS_STYLES } from "@/lib/utils";
 
+function waLink(phone: string, text: string): string {
+  let d = phone.replace(/[^0-9]/g, "");
+  if (d.startsWith("0")) d = `20${d.slice(1)}`;
+  return `https://wa.me/${d}?text=${encodeURIComponent(text)}`;
+}
 type OrderItem = {
   id: number;
   name: string;
@@ -23,6 +28,8 @@ type Order = {
   city: string;
   notes: string | null;
   subtotal: number;
+  discountCode: string | null;
+  discount: number;
   shipping: number;
   total: number;
   status: string;
@@ -142,6 +149,12 @@ export default function OrdersTable({ initial }: { initial: Order[] }) {
                     <div className="flex justify-between text-ink/60">
                       <dt>Subtotal</dt><dd>{formatMoney(o.subtotal)}</dd>
                     </div>
+                    {o.discount != null && o.discount > 0 && (
+                      <div className="flex justify-between font-medium text-emerald-600">
+                        <dt>Discount ({o.discountCode})</dt>
+                        <dd>−{formatMoney(o.discount)}</dd>
+                      </div>
+                    )}
                     <div className="flex justify-between text-ink/60">
                       <dt>Shipping</dt><dd>{o.shipping === 0 ? "FREE" : formatMoney(o.shipping)}</dd>
                     </div>
@@ -168,6 +181,23 @@ export default function OrdersTable({ initial }: { initial: Order[] }) {
                       </p>
                     )}
                   </div>
+
+                  <a
+                    href={waLink(
+                      o.phone,
+                      `Hello ${o.customerName}! Your Empty Corner order ${o.number} (${formatMoney(
+                        o.total
+                      )} cash on delivery) is being prepared. We'll confirm delivery soon 🏡`
+                    )}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-xs font-bold text-white transition hover:brightness-95"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <path d="M12.04 2a9.9 9.9 0 0 0-8.4 15.2L2 22l4.9-1.6A9.9 9.9 0 1 0 12.04 2Zm5.8 14.2c-.25.7-1.45 1.35-2 1.4-.5.05-1.15.25-3.85-.8-3.25-1.3-5.3-4.6-5.45-4.8-.15-.2-1.3-1.75-1.3-3.35s.85-2.35 1.15-2.65c.3-.3.65-.4.85-.4h.6c.2 0 .45-.05.7.55.25.6.85 2.1.9 2.25.05.15.1.3 0 .5-.1.2-.15.35-.3.55l-.45.5c-.15.15-.3.3-.15.6.15.3.7 1.2 1.5 1.95 1.05.95 1.9 1.25 2.2 1.4.3.15.45.1.65-.05.2-.15.75-.85.95-1.15.2-.3.4-.25.65-.15.25.1 1.65.8 1.95.95.3.15.5.2.55.35.05.1.05.75-.2 1.45Z" />
+                    </svg>
+                    WhatsApp customer
+                  </a>
 
                   <div>
                     <h3 className="mb-2 text-xs font-bold uppercase tracking-widest text-ink/50">

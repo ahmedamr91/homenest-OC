@@ -9,4 +9,3 @@ prisma/dev.db-journal
 uploads
 
 .env
-server-log.txt

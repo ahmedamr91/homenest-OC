@@ -68,6 +68,9 @@ async function main() {
   const catIds = {};
   for (const c of await prisma.category.findMany()) catIds[c.slug] = c.id;
 
+  // USD→EGP scaling for realistic pricing
+  const EGP = 50;
+
   let count = 0;
   for (const [catSlug, items] of Object.entries(products)) {
     for (const [name, price, comparePrice, stock, featured, colors, description] of items) {
@@ -76,8 +79,8 @@ async function main() {
           name,
           slug: slugify(name),
           description,
-          price,
-          comparePrice,
+          price: price * EGP,
+          comparePrice: comparePrice ? comparePrice * EGP : null,
           stock,
           featured,
           categoryId: catIds[catSlug],
@@ -88,16 +91,28 @@ async function main() {
     }
   }
 
+  await prisma.discountCode.create({
+    data: {
+      code: "WELCOME10",
+      type: "PERCENT",
+      value: 10,
+      minOrder: 500,
+      maxUses: 1000,
+    },
+  });
+
   const passwordHash = await bcrypt.hash(process.env.ADMIN_PASSWORD || "Admin@12345", 12);
   await prisma.admin.create({
     data: {
-      email: process.env.ADMIN_EMAIL || "admin@maison.local",
+      email: process.env.ADMIN_EMAIL || "admin@emptycorner.local",
       passwordHash,
       name: "Store Admin",
     },
   });
 
-  console.log(`Seeded ${categories.length} categories, ${count} products, admin user.`);
+  console.log(
+    `Seeded ${categories.length} categories, ${count} products (EGP), WELCOME10 code, admin user.`
+  );
 }
 
 main()

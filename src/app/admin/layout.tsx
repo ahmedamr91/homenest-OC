@@ -18,7 +18,7 @@ export default async function AdminLayout({
     <div className="min-h-screen bg-sand/50 lg:flex" id="admin-shell">
       <aside className="flex flex-col gap-6 border-b border-ink/10 bg-ink px-5 py-6 text-cream lg:min-h-screen lg:w-64 lg:border-b-0 lg:border-r">
         <div className="flex items-center gap-2">
-          <Logo />
+          <Logo dark compact />
           <span className="rounded bg-cream/10 px-1.5 py-0.5 text-[10px] font-body font-bold uppercase tracking-widest text-cream/70">
             admin
           </span>
