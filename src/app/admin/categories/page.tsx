@@ -8,7 +8,6 @@ export default async function AdminCategoriesPage() {
     include: { _count: { select: { products: true } } },
     orderBy: { name: "asc" },
   });
-
   return (
     <div>
       <h1 className="font-display text-3xl text-ink sm:text-4xl">Categories</h1>
@@ -21,6 +20,7 @@ export default async function AdminCategoriesPage() {
           name: c.name,
           slug: c.slug,
           description: c.description,
+          imageUrl: c.imageUrl,
           productCount: c._count.products,
         }))}
       />

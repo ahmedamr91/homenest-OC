@@ -117,13 +117,32 @@ export default async function HomePage() {
             <Link
               key={c.id}
               href={`/shop?category=${c.slug}`}
-              className="group rounded-xl2 border border-ink/10 bg-white p-5 text-center shadow-card transition hover:border-clay/40 hover:shadow-lift"
+              className="group overflow-hidden rounded-xl2 border border-ink/10 bg-white shadow-card transition hover:-translate-y-1 hover:border-clay/40 hover:shadow-lift"
             >
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-sand font-display text-xl text-clay transition group-hover:bg-clay group-hover:text-white">
-                {c.name.charAt(0)}
+              <div className="relative aspect-[4/3] overflow-hidden bg-sand">
+                {c.imageUrl ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={c.imageUrl}
+                      alt={c.name}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
+                    <span className="absolute bottom-2 left-0 right-0 text-center text-sm font-bold text-white drop-shadow">
+                      {c.name}
+                    </span>
+                  </>
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-1 transition group-hover:bg-linen">
+                    <span className="font-display text-3xl text-clay">{c.name.charAt(0)}</span>
+                    <span className="px-2 text-center text-xs font-semibold leading-tight">{c.name}</span>
+                  </div>
+                )}
               </div>
-              <div className="text-sm font-semibold leading-tight">{c.name}</div>
-              <div className="mt-1 text-xs text-ink/50">{c._count.products} items</div>
+              <div className="px-3 py-2.5 text-xs text-ink/50">
+                {c._count.products} item{c._count.products === 1 ? "" : "s"}
+              </div>
             </Link>
           ))}
         </div>

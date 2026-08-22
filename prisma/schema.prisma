@@ -12,6 +12,7 @@ model Category {
   name        String    @unique
   slug        String    @unique
   description String?
+  imageUrl    String?
   createdAt   DateTime  @default(now())
   products    Product[]
 }

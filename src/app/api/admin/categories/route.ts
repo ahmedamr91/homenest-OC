@@ -36,6 +36,7 @@ export async function POST(req: Request) {
         name: parsed.data.name,
         slug,
         description: parsed.data.description ?? null,
+        imageUrl: parsed.data.imageUrl ?? null,
       },
     });
     return NextResponse.json({ ok: true, id: category.id }, { status: 201 });

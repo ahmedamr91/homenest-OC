@@ -41,7 +41,17 @@ export const productSchema = z.object({
 export const categorySchema = z.object({
   name: z.string().trim().min(2).max(80),
   description: z.string().trim().max(500).nullable().optional(),
+  imageUrl: z
+    .string()
+    .trim()
+    .url()
+    .max(1000)
+    .nullable()
+    .optional()
+    .or(z.literal("").transform(() => null)),
 });
+
+export const categoryUpdateSchema = categorySchema.partial();
 
 export const checkoutSchema = z.object({
   customerName: z.string().trim().min(2).max(120),
