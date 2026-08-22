@@ -39,7 +39,7 @@ export default function Footer() {
         <div>
           <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-ink/50">Good to know</h3>
           <ul className="space-y-2.5 text-sm text-ink/70">
-            <li>Free shipping over EGP 3,000</li>
+            <li>Free shipping over $75</li>
             <li>Cash on delivery available</li>
             <li>30-day easy returns</li>
             <li>Secure checkout</li>
@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-ink/10 py-5 text-center text-xs text-ink/50">
-        © {new Date().getFullYear()} Empty Corner Home Accessories. All rights reserved.
+        © {new Date().getFullYear()} HOMENEST Home Accessories. All rights reserved.
       </div>
     </footer>
   );

@@ -74,19 +74,12 @@ export default async function ShopPage({
   const total = await db.product.count({ where });
   const products = await db.product.findMany({
     where,
-    include: { colors: true, category: true, images: { orderBy: { sort: "asc" }, take: 1 } },
+    include: { colors: true, category: true },
     orderBy,
     skip: (page - 1) * PAGE_SIZE,
     take: PAGE_SIZE,
   });
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
-  const ratings = await db.review.groupBy({
-    by: ["productId"],
-    where: { approved: true, productId: { in: products.map((p) => p.id) } },
-    _avg: { rating: true },
-    _count: true,
-  });
 
   return (
     <div className="container-page py-10">
@@ -128,19 +121,9 @@ export default async function ShopPage({
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
-              {products.map((p) => {
-                const r = ratings.find((x) => x.productId === p.id);
-                return (
-                  <ProductCard
-                    key={p.id}
-                    product={{
-                      ...p,
-                      ratingAvg: r?._avg.rating ?? null,
-                      ratingCount: r?._count ?? 0,
-                    }}
-                  />
-                );
-              })}
+              {products.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
             </div>
           )}
 

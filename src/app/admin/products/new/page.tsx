@@ -22,7 +22,6 @@ export default async function NewProductPage() {
           imageUrl: null,
           categoryId: null,
           colors: [],
-          images: [],
         }}
       />
     </div>

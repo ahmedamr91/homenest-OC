@@ -1,13 +1,12 @@
 export function formatMoney(n: number): string {
-  return new Intl.NumberFormat("en-EG", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "EGP",
-    maximumFractionDigits: n % 1 === 0 ? 0 : 2,
+    currency: "USD",
   }).format(n);
 }
 
-export const SHIPPING_THRESHOLD = 3000; // free shipping above this (EGP)
-export const SHIPPING_FEE = 60;
+export const SHIPPING_THRESHOLD = 75;
+export const SHIPPING_FEE = 9.95;
 
 export function shippingFor(subtotal: number): number {
   return subtotal >= SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_FEE;

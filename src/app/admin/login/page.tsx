@@ -49,7 +49,7 @@ function LoginForm() {
           required
           autoComplete="username"
           className="input mb-4"
-          placeholder="you@yourstore.com"
+          placeholder="admin@maison.local"
         />
 
         <label htmlFor="password" className="label">Password</label>
@@ -74,8 +74,8 @@ function LoginForm() {
         </button>
 
         <p className="mt-5 rounded-lg bg-sand/70 p-3 text-center text-[11px] leading-relaxed text-ink/50">
-          🔒 Use the admin credentials configured in your environment
-          (ADMIN_EMAIL / ADMIN_PASSWORD). Contact support if locked out.
+          Default credentials (change after first login):<br />
+          admin@maison.local · Admin@12345
         </p>
       </div>
     </form>

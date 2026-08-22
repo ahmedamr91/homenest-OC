@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { checkoutSchema } from "@/lib/validators";
-import { orderNumber } from "@/lib/utils";
-import { getCityFee } from "@/lib/shipping";
+import { orderNumber, shippingFor } from "@/lib/utils";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-import {
-  sendNewOrderAlert,
-  sendOrderConfirmation,
-} from "@/lib/email";
 
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
@@ -53,9 +48,7 @@ export async function POST(req: Request) {
     const lines = data.items.map((item) => {
       const product = products.find((p) => p.id === item.productId)!;
       const color =
-        item.colorId != null
-          ? product.colors.find((c) => c.id === item.colorId)
-          : undefined;
+        item.colorId != null ? product.colors.find((c) => c.id === item.colorId) : undefined;
       if (item.colorId != null && !color) {
         throw new Error("Selected color is no longer available.");
       }
@@ -72,38 +65,13 @@ export async function POST(req: Request) {
       };
     });
 
-    const round2 = (n: number) => Math.round(n * 100) / 100;
-    const subtotal = round2(lines.reduce((s, l) => s + l.price * l.quantity, 0));
+    const subtotal =
+      Math.round(lines.reduce((s, l) => s + l.price * l.quantity, 0) * 100) / 100;
+    const shipping = shippingFor(subtotal);
+    const total = subtotal + shipping;
 
-    // ── Discount validation (server-side, never trust client math) ──
-    let discount = 0;
-    let appliedCode: string | null = null;
-    const requested = data.discountCode?.toUpperCase() || null;
-
-    if (requested) {
-      const dc = await db.discountCode.findUnique({ where: { code: requested } });
-      if (!dc || !dc.active)
-        throw new Error(`Promo code "${requested}" is not valid.`);
-      if (dc.expiresAt && dc.expiresAt < new Date())
-        throw new Error(`Promo code "${requested}" has expired.`);
-      if (dc.maxUses != null && dc.usedCount >= dc.maxUses)
-        throw new Error(`Promo code "${requested}" has reached its usage limit.`);
-      if (dc.minOrder != null && subtotal < dc.minOrder)
-        throw new Error(
-          `Promo code "${requested}" needs a minimum order of EGP ${dc.minOrder.toFixed(2)}.`
-        );
-      discount =
-        dc.type === "PERCENT"
-          ? round2((subtotal * dc.value) / 100)
-          : Math.min(dc.value, subtotal);
-      appliedCode = dc.code;
-    }
-
-    const discountedSubtotal = round2(subtotal - discount);
-    const shipping = getCityFee(data.city, discountedSubtotal);
-    const total = round2(discountedSubtotal + shipping);
-
-    const result = await db.$transaction(async (tx) => {
+    const order = await db.$transaction(async (tx) => {
+      // Decrement stock atomically; abort if insufficient
       for (const line of lines) {
         const updated = await tx.product.updateMany({
           where: { id: line.productId, stock: { gte: line.quantity } },
@@ -116,13 +84,6 @@ export async function POST(req: Request) {
         }
       }
 
-      if (appliedCode) {
-        await tx.discountCode.update({
-          where: { code: appliedCode },
-          data: { usedCount: { increment: 1 } },
-        });
-      }
-
       return tx.order.create({
         data: {
           number: orderNumber(),
@@ -133,8 +94,6 @@ export async function POST(req: Request) {
           city: data.city,
           notes: data.notes ?? null,
           subtotal,
-          discountCode: appliedCode,
-          discount,
           shipping,
           total,
           items: { create: lines },
@@ -142,33 +101,7 @@ export async function POST(req: Request) {
       });
     });
 
-    // ── Notifications (non-blocking failures don't break the order) ──
-    const lowStock = await db.product.findMany({
-      where: { published: true, stock: { lte: 10 }, id: { in: productIds } },
-      select: { name: true, stock: true },
-    });
-
-    void sendOrderConfirmation({
-      number: result.number,
-      customerName: result.customerName,
-      email: result.email,
-      city: result.city,
-      total: result.total,
-      items: lines,
-    }).catch(() => {});
-
-    void sendNewOrderAlert({
-      number: result.number,
-      customerName: result.customerName,
-      phone: result.phone,
-      address: result.address,
-      city: result.city,
-      total: result.total,
-      discountCode: result.discountCode,
-      lowStock,
-    }).catch(() => {});
-
-    return NextResponse.json({ ok: true, number: result.number });
+    return NextResponse.json({ ok: true, number: order.number });
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "Could not place the order.";

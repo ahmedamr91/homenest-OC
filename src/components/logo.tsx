@@ -1,62 +1,31 @@
 import Link from "next/link";
 
-// Brand badge: rounded picture-frame with stacked "Empty! Corner!" wordmark,
-// drawn in the site palette (ink / cream / clay).
-export function LogoMark({
-  width = 44,
-  dark = false,
-}: {
-  width?: number;
-  dark?: boolean;
-}) {
-  const ink = dark ? "#FAF6F0" : "#221B15";
-  const clay = "#B4552D";
-  const height = Math.round(width * 0.72);
+export function LogoMark({ size = 34 }: { size?: number }) {
   return (
     <svg
-      width={width}
-      height={height}
-      viewBox="0 0 96 69"
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
       fill="none"
       aria-hidden
       className="shrink-0"
     >
-      <rect
-        x="4"
-        y="4"
-        width="88"
-        height="61"
-        rx="11"
-        fill="none"
-        stroke={ink}
-        strokeWidth="4.5"
+      <rect width="32" height="32" rx="9" fill="#221B15" />
+      <path
+        d="M7.5 16.5 L16 8 L24.5 16.5"
+        stroke="#FAF6F0"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <g transform="rotate(-1.5 48 34)">
-        <text
-          x="49"
-          y="30"
-          textAnchor="middle"
-          fontFamily="'Arial Black', 'Segoe UI', Arial, sans-serif"
-          fontWeight="900"
-          fontSize="17"
-          letterSpacing="0.5"
-          fill={ink}
-        >
-          Empty<tspan fill={clay}>!</tspan>
-        </text>
-        <text
-          x="47"
-          y="50"
-          textAnchor="middle"
-          fontFamily="'Arial Black', 'Segoe UI', Arial, sans-serif"
-          fontWeight="900"
-          fontSize="17"
-          letterSpacing="0.5"
-          fill={ink}
-        >
-          Corner<tspan fill={clay}>!</tspan>
-        </text>
-      </g>
+      <path
+        d="M11 15v9h10v-9"
+        stroke="#FAF6F0"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="16" cy="19" r="2.6" fill="#B4552D" />
     </svg>
   );
 }
@@ -68,27 +37,19 @@ export default function Logo({
   dark?: boolean;
   compact?: boolean;
 }) {
-  const width = compact ? 38 : 46;
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-2.5 transition hover:opacity-85"
-      aria-label="Empty Corner — home"
+      className="flex items-center gap-2.5 transition hover:opacity-80"
+      aria-label="HOMENEST — home"
     >
-      <LogoMark width={width} dark={dark} />
+      {!compact && <LogoMark />}
       <span
-        aria-hidden
-        className={`flex flex-col font-black leading-[0.95] tracking-tight ${
+        className={`font-display tracking-wide ${compact ? "text-xl" : "text-2xl"} ${
           dark ? "text-cream" : "text-ink"
-        } ${compact ? "text-sm" : "text-base"}`}
-        style={{ fontFamily: "'Arial Black', 'Segoe UI', Arial, sans-serif" }}
+        }`}
       >
-        <span>
-          Empty<span className="text-clay">!</span>
-        </span>
-        <span>
-          Corner<span className="text-clay">!</span>
-        </span>
+        HOME<span className="text-clay">NEST</span>
       </span>
     </Link>
   );

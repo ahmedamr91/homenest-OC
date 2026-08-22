@@ -2,8 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { formatMoney, STATUS_STYLES } from "@/lib/utils";
-import { waLink, waPhone } from "@/lib/wa";
-import OrderWhatsApp from "./order-whatsapp";
 
 export const dynamic = "force-dynamic";
 
@@ -17,14 +15,6 @@ export default async function OrderPage({
     include: { items: true },
   });
   if (!order) notFound();
-
-  const wa = waLink(
-    order.phone,
-    `Hi Empty Corner! I just placed order ${order.number} (${order.items.reduce(
-      (s, i) => s + i.quantity,
-      0
-    )} items, EGP ${order.total.toFixed(0)} cash on delivery). Confirming my order 👋`
-  );
 
   return (
     <div className="container-page flex flex-col items-center py-14">
@@ -78,14 +68,8 @@ export default async function OrderPage({
             <dt>Subtotal</dt>
             <dd>{formatMoney(order.subtotal)}</dd>
           </div>
-          {order.discount > 0 && (
-            <div className="flex justify-between font-medium text-emerald-600">
-              <dt>Discount ({order.discountCode})</dt>
-              <dd>−{formatMoney(order.discount)}</dd>
-            </div>
-          )}
           <div className="flex justify-between text-ink/60">
-            <dt>Shipping to {order.city}</dt>
+            <dt>Shipping</dt>
             <dd>{order.shipping === 0 ? "FREE" : formatMoney(order.shipping)}</dd>
           </div>
           <div className="flex justify-between pt-1 text-base font-bold">
@@ -100,9 +84,7 @@ export default async function OrderPage({
         </div>
       </div>
 
-      {wa && <OrderWhatsApp href={wa} />}
-
-      <Link href="/shop" className="btn-secondary mt-4">
+      <Link href="/shop" className="btn-secondary mt-8">
         Continue shopping
       </Link>
     </div>

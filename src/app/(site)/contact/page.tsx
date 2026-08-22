@@ -12,10 +12,10 @@ export default function ContactPage() {
       </p>
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         {[
-          ["Email", "hello@emptycorner.shop", "For orders & general questions"],
+          ["Email", "hello@maison.local", "For orders & general questions"],
           ["Phone / WhatsApp", "+20 100 000 0000", "Sun–Thu, 9am–6pm"],
           ["Showroom", "14 Nile Corniche, Cairo", "Visits by appointment"],
-          ["Returns", "returns@emptycorner.shop", "30 days, no questions asked"],
+          ["Returns", "returns@maison.local", "30 days, no questions asked"],
         ].map(([title, value, note]) => (
           <div key={title} className="rounded-xl2 bg-white p-6 shadow-card">
             <div className="text-xs font-bold uppercase tracking-widest text-clay">{title}</div>

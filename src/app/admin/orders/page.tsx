@@ -27,8 +27,6 @@ export default async function AdminOrdersPage() {
           city: o.city,
           notes: o.notes,
           subtotal: o.subtotal,
-          discountCode: o.discountCode,
-          discount: o.discount,
           shipping: o.shipping,
           total: o.total,
           status: o.status,

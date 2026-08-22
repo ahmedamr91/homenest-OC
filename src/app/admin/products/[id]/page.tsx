@@ -13,10 +13,7 @@ export default async function EditProductPage({
   if (!Number.isInteger(id) || id <= 0) notFound();
 
   const [product, categories] = await Promise.all([
-    db.product.findUnique({
-      where: { id },
-      include: { colors: true, images: { orderBy: { sort: "asc" } } },
-    }),
+    db.product.findUnique({ where: { id }, include: { colors: true } }),
     db.category.findMany({ orderBy: { name: "asc" } }),
   ]);
   if (!product) notFound();
@@ -44,7 +41,6 @@ export default async function EditProductPage({
             name: c.name,
             hex: c.hex,
           })),
-          images: product.images.map((i) => i.url),
         }}
       />
     </div>

@@ -19,7 +19,6 @@ export type ProductFormValues = {
   imageUrl: string | null;
   categoryId: number | null;
   colors: { id?: number; name: string; hex: string }[];
-  images: string[];
 };
 
 const PALETTE = [
@@ -55,42 +54,8 @@ export default function ProductForm({
   const [colors, setColors] = useState<Color[]>(
     initial.colors.map((c) => ({ name: c.name, hex: c.hex }))
   );
-  const [images, setImages] = useState<string[]>(initial.images);
-  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-
-  async function uploadFiles(files: FileList | null) {
-    if (!files?.length) return;
-    setError(null);
-    const room = 8 - images.length;
-    if (room <= 0) {
-      setError("Maximum 8 photos per product.");
-      return;
-    }
-    setUploading(true);
-    const list = Array.from(files).slice(0, room);
-    for (const f of list) {
-      if (f.size > 4 * 1024 * 1024) {
-        setError(`"${f.name}" is over 4MB — skipped.`);
-        continue;
-      }
-      try {
-        const fd = new FormData();
-        fd.set("file", f);
-        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error || "Upload failed.");
-          continue;
-        }
-        setImages((prev) => (prev.length < 8 ? [...prev, data.url] : prev));
-      } catch {
-        setError("Upload failed. Check your connection.");
-      }
-    }
-    setUploading(false);
-  }
 
   function setColor(i: number, patch: Partial<Color>) {
     setColors((prev) => prev.map((c, idx) => (idx === i ? { ...c, ...patch } : c)));
@@ -123,7 +88,6 @@ export default function ProductForm({
             imageUrl: imageUrl.trim() === "" ? null : imageUrl.trim(),
             categoryId,
             colors,
-            images,
           }),
         }
       );
@@ -193,54 +157,6 @@ export default function ProductForm({
               </label>
             </div>
           </div>
-        </section>
-
-        <section className="card p-6">
-          <div className="mb-1 flex items-center justify-between">
-            <h2 className="font-semibold">Product photos</h2>
-            <span className="text-xs text-ink/50">{images.length}/8</span>
-          </div>
-          <p className="mb-4 text-sm text-ink/60">
-            Upload real photos (JPG/PNG/WebP, max 4MB each). Shoppers see them in a gallery.
-          </p>
-
-          {images.length > 0 && (
-            <div className="mb-4 grid grid-cols-4 gap-3 sm:grid-cols-5">
-              {images.map((url, i) => (
-                <div key={url} className="group relative aspect-square overflow-hidden rounded-lg border border-ink/10">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
-                  {i === 0 && (
-                    <span className="absolute left-1 top-1 rounded bg-clay px-1.5 py-0.5 text-[9px] font-bold uppercase text-white">
-                      Cover
-                    </span>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setImages((p) => p.filter((_, idx) => idx !== i))}
-                    aria-label={`Remove photo ${i + 1}`}
-                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-xs text-white opacity-0 transition group-hover:opacity-100"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <label className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-ink/20 py-4 text-sm font-semibold transition hover:border-clay hover:text-clay ${images.length >= 8 || uploading ? "pointer-events-none opacity-50" : ""}`}>
-            {uploading ? "Uploading…" : images.length === 0 ? "📷 Upload photos" : "＋ Add more photos"}
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              multiple
-              className="hidden"
-              onChange={(e) => {
-                void uploadFiles(e.target.files);
-                e.target.value = "";
-              }}
-            />
-          </label>
         </section>
 
         <section className="card p-6">
