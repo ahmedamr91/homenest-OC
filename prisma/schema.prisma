@@ -129,6 +129,12 @@ model Subscriber {
   createdAt DateTime @default(now())
 }
 
+model PageViewDay {
+  id    Int      @id @default(autoincrement())
+  day   DateTime @unique // that day at midnight UTC
+  views Int      @default(0)
+}
+
 model EmailLog {
   id        Int      @id @default(autoincrement())
   to        String

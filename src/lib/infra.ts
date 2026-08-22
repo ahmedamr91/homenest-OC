@@ -48,6 +48,39 @@ export async function getDbSizeBytes(): Promise<number | null> {
   }
 }
 
+export async function getTrafficStats() {
+  const now = new Date();
+  const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  const since30 = new Date(now.getTime() - 29 * 86_400_000);
+
+  const [rows, monthAgg] = await Promise.all([
+    db.pageViewDay.findMany({
+      where: { day: { gte: since30 } },
+      orderBy: { day: "asc" },
+    }),
+    db.pageViewDay.aggregate({
+      where: { day: { gte: monthStart } },
+      _sum: { views: true },
+    }),
+  ]);
+
+  // Fill a 30-day series
+  const series: { label: string; views: number }[] = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 86_400_000);
+    const key = new Date(
+      Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
+    );
+    series.push({
+      label: d.toLocaleDateString("en-EG", { day: "numeric", month: "short" }),
+      views: rows.find((r) => r.day.getTime() === key.getTime())?.views || 0,
+    });
+  }
+
+  const thisMonth = monthAgg._sum.views || 0;
+  return { thisMonth, series };
+}
+
 export async function getInfraStats() {
   const monthStart = new Date();
   monthStart.setDate(1);

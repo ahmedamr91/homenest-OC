@@ -1,4 +1,4 @@
-import { getInfraStats } from "@/lib/infra";
+import { getInfraStats, getTrafficStats } from "@/lib/infra";
 import { ADMIN_EMAIL } from "@/lib/site-config";
 import Link from "next/link";
 
@@ -73,7 +73,9 @@ function Meter({
 }
 
 export default async function InfraPage() {
-  const s = await getInfraStats();
+  const [s, traffic] = await Promise.all([getInfraStats(), getTrafficStats()]);
+  const estBandwidthGB = (traffic.thisMonth * 0.00025); // ~250 KB per visit
+  const maxViews = Math.max(...traffic.series.map((d) => d.views), 1);
 
   return (
     <div>
@@ -106,29 +108,55 @@ export default async function InfraPage() {
         />
         <div className="card p-6">
           <div className="flex items-baseline justify-between">
-            <h3 className="font-semibold">Site traffic &amp; photo delivery</h3>
-            <a href="https://vercel.com/dashboard" target="_blank" rel="noreferrer" className="text-xs font-bold text-clay hover:underline">
-              Vercel ↗
-            </a>
+            <h3 className="font-semibold">Site visits (tracked live)</h3>
+            <span className={`text-xs font-bold uppercase tracking-wider ${level((estBandwidthGB / 100) * 100).color}`}>
+              {level((estBandwidthGB / 100) * 100).word}
+            </span>
           </div>
-          <p className="mt-3 text-sm leading-relaxed text-ink/60">
-            Vercel shows bandwidth on its dashboard (free tier ≈ 100 GB/mo — enough for hundreds of thousands of visits).
-          </p>
-          <ul className="mt-3 space-y-1.5 text-sm text-ink/60">
-            <li>
-              📸 Photo delivery:{" "}
-              <a href="https://uploadthing.com/dashboard" target="_blank" rel="noreferrer" className="font-medium text-clay hover:underline">
-                UploadThing dashboard ↗
+
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="font-display text-3xl text-ink">{traffic.thisMonth.toLocaleString()}</span>
+            <span className="text-sm text-ink/50">visits this month</span>
+          </div>
+
+          {/* 30-day mini chart */}
+          <div className="mt-4 flex h-16 items-end gap-[3px]">
+            {traffic.series.map((d, i) => (
+              <div key={i} className="group relative flex h-full flex-1 flex-col justify-end">
+                <div
+                  className={`w-full rounded-t-sm ${d.views > 0 ? "bg-moss group-hover:bg-clay" : "bg-sand"}`}
+                  style={{ height: d.views > 0 ? `${Math.max(8, (d.views / maxViews) * 100)}%` : "2px" }}
+                />
+                <span className="pointer-events-none absolute -top-6 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-ink px-1.5 py-0.5 text-[9px] font-bold text-cream group-hover:block">
+                  {d.views} · {d.label}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-1 flex justify-between text-[10px] uppercase tracking-wider text-ink/40">
+            <span>30 days ago</span>
+            <span>Today</span>
+          </div>
+
+          <div className="mt-4 border-t border-dashed border-ink/15 pt-3">
+            <div className="flex justify-between text-xs">
+              <span className="text-ink/60">Estimated bandwidth (~250 KB/visit)</span>
+              <span className="font-bold">{estBandwidthGB.toFixed(2)} GB of 100 GB</span>
+            </div>
+            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-sand">
+              <div
+                className={`h-full rounded-full ${estBandwidthGB > 80 ? "bg-red-500" : estBandwidthGB > 50 ? "bg-amber-400" : "bg-emerald-500"}`}
+                style={{ width: `${Math.max(2, Math.min(100, (estBandwidthGB / 100) * 100))}%` }}
+              />
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-ink/50">
+              Official number lives in the{" "}
+              <a href="https://vercel.com/dashboard" target="_blank" rel="noreferrer" className="font-medium text-clay hover:underline">
+                Vercel dashboard ↗
               </a>{" "}
-              (~5 GB/mo free)
-            </li>
-            <li>
-              🗄️ Database metrics:{" "}
-              <a href="https://console.neon.tech" target="_blank" rel="noreferrer" className="font-medium text-clay hover:underline">
-                Neon console ↗
-              </a>
-            </li>
-          </ul>
+              — our estimate is usually within ±30%.
+            </p>
+          </div>
         </div>
       </div>
 
