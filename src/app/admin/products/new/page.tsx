@@ -19,6 +19,7 @@ export default async function NewProductPage() {
           stock: 0,
           featured: false,
           published: true,
+          returnDays: null,
           imageUrl: null,
           categoryId: null,
           colors: [],

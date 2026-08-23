@@ -46,6 +46,7 @@ export async function POST(req: Request) {
         stock: d.stock,
         featured: d.featured ?? false,
         published: d.published ?? true,
+        returnDays: d.returnDays ?? null,
         imageUrl: d.imageUrl ?? null,
         categoryId: d.categoryId,
         colors: { create: d.colors },

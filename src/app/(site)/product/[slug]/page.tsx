@@ -167,7 +167,11 @@ export default async function ProductPage({
             </div>
             <div className="flex justify-between">
               <dt>Returns</dt>
-              <dd className="font-medium text-ink">{siteSettings.returnsNote}</dd>
+              <dd className="font-medium text-ink">
+                {product.returnDays != null
+                  ? `${product.returnDays}-day easy returns`
+                  : siteSettings.returnsNote}
+              </dd>
             </div>
           </dl>
         </div>

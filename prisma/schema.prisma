@@ -27,6 +27,7 @@ model Product {
   stock        Int            @default(0)
   featured     Boolean        @default(false)
   published    Boolean        @default(true)
+  returnDays   Int?
   imageUrl     String?
   categoryId   Int
   category     Category       @relation(fields: [categoryId], references: [id])

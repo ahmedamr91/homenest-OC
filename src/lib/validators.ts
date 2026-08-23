@@ -20,6 +20,7 @@ export const productSchema = z.object({
   stock: z.number().int().min(0).max(1000000),
   featured: z.boolean().optional().default(false),
   published: z.boolean().optional().default(true),
+  returnDays: z.number().int().min(0).max(365).nullable().optional(),
   imageUrl: z
     .string()
     .trim()

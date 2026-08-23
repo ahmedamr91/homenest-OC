@@ -16,6 +16,7 @@ export type ProductFormValues = {
   stock: number;
   featured: boolean;
   published: boolean;
+  returnDays: number | null;
   imageUrl: string | null;
   categoryId: number | null;
   colors: { id?: number; name: string; hex: string }[];
@@ -48,6 +49,9 @@ export default function ProductForm({
   const [stock, setStock] = useState(String(initial.stock));
   const [featured, setFeatured] = useState(initial.featured);
   const [published, setPublished] = useState(initial.published);
+  const [returnDays, setReturnDays] = useState(
+    initial.returnDays != null ? String(initial.returnDays) : ""
+  );
   const [imageUrl, setImageUrl] = useState(initial.imageUrl || "");
   const [categoryId, setCategoryId] = useState<number | null>(
     initial.categoryId ?? categories[0]?.id ?? null
@@ -120,6 +124,7 @@ export default function ProductForm({
             stock: Number(stock),
             featured,
             published,
+            returnDays: returnDays === "" ? null : Number(returnDays),
             imageUrl: imageUrl.trim() === "" ? null : imageUrl.trim(),
             categoryId,
             colors,
@@ -168,6 +173,13 @@ export default function ProductForm({
               <div>
                 <label htmlFor="stock" className="label">Stock *</label>
                 <input id="stock" type="number" min="0" step="1" required value={stock} onChange={(e) => setStock(e.target.value)} className="input" />
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="returnDays" className="label">Return days</label>
+                <input id="returnDays" type="number" min="0" max="365" step="1" value={returnDays} onChange={(e) => setReturnDays(e.target.value)} className="input" placeholder="Global default" />
+                <p className="mt-1 text-xs text-ink/40">Leave empty to use the site-wide setting.</p>
               </div>
             </div>
             <div>
