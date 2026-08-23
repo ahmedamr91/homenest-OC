@@ -15,16 +15,25 @@ function CartIcon() {
   );
 }
 
-export default function Header({ freeThreshold = 3000 }: { freeThreshold?: number }) {
+type NavCategory = { name: string; slug: string };
+
+export default function Header({
+  freeThreshold = 3000,
+  categories = [],
+}: {
+  freeThreshold?: number;
+  categories?: NavCategory[];
+}) {
   const pathname = usePathname();
   const { count, ready } = useCart();
   const [open, setOpen] = useState(false);
 
   const nav = [
     { href: "/shop", label: "Shop All" },
-    { href: "/shop?category=lighting", label: "Lighting" },
-    { href: "/shop?category=vases-planters", label: "Vases" },
-    { href: "/custom", label: "Make Yours", accent: true },
+    ...categories.map((c) => ({
+      href: `/shop?category=${c.slug}`,
+      label: c.name,
+    })),
   ];
 
   return (
@@ -41,12 +50,8 @@ export default function Header({ freeThreshold = 3000 }: { freeThreshold?: numbe
               <Link
                 key={n.label}
                 href={n.href}
-                className={`text-sm font-medium transition ${
-                  n.accent
-                    ? "rounded-full bg-clay/10 px-4 py-1.5 font-semibold text-clay hover:bg-clay hover:text-white"
-                    : `hover:text-clay ${
-                        pathname === n.href.split("?")[0] ? "text-clay" : "text-ink/80"
-                      }`
+                className={`text-sm font-medium transition hover:text-clay ${
+                  pathname === n.href.split("?")[0] ? "text-clay" : "text-ink/80"
                 }`}
               >
                 {n.label}
@@ -82,7 +87,7 @@ export default function Header({ freeThreshold = 3000 }: { freeThreshold?: numbe
         {open && (
           <nav className="border-t border-ink/10 bg-cream md:hidden">
             <div className="container-page flex flex-col py-3">
-              {[...nav, { href: "/about", label: "About" }].map((n) => (
+              {nav.map((n) => (
                 <Link
                   key={n.label}
                   href={n.href}
