@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Logo from "./logo";
 
-export default function Footer() {
+export default async function Footer() {
+  const { getSiteSettings } = await import("@/lib/settings");
+  const settings = await getSiteSettings();
   return (
     <footer className="mt-24 border-t border-ink/10 bg-sand/60">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
@@ -39,9 +41,9 @@ export default function Footer() {
         <div>
           <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-ink/50">Good to know</h3>
           <ul className="space-y-2.5 text-sm text-ink/70">
-            <li>Free shipping over EGP 3,000</li>
+            <li>Free shipping over EGP {settings.freeShippingThreshold.toLocaleString()}</li>
             <li>Cash on delivery available</li>
-            <li>30-day easy returns</li>
+            <li>{settings.returnsDays}-day easy returns</li>
             <li>Secure checkout</li>
           </ul>
         </div>

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { checkoutSchema } from "@/lib/validators";
 import { orderNumber } from "@/lib/utils";
-import { getCityFee } from "@/lib/shipping";
+import { getSiteSettings, computeShipping } from "@/lib/settings";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import {
   sendNewOrderAlert,
@@ -100,7 +100,8 @@ export async function POST(req: Request) {
     }
 
     const discountedSubtotal = round2(subtotal - discount);
-    const shipping = getCityFee(data.city, discountedSubtotal);
+    const siteSettings = await getSiteSettings();
+    const shipping = computeShipping(data.city, discountedSubtotal, siteSettings);
     const total = round2(discountedSubtotal + shipping);
 
     const result = await db.$transaction(async (tx) => {

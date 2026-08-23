@@ -15,7 +15,7 @@ function CartIcon() {
   );
 }
 
-export default function Header() {
+export default function Header({ freeThreshold = 3000 }: { freeThreshold?: number }) {
   const pathname = usePathname();
   const { count, ready } = useCart();
   const [open, setOpen] = useState(false);
@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <>
       <div className="bg-ink text-center text-[11px] sm:text-xs tracking-widest uppercase text-cream/90 py-2 px-4">
-        Free shipping on orders over EGP 3,000 · Cash on delivery across Egypt
+        Free shipping on orders over EGP {freeThreshold.toLocaleString()} · Cash on delivery across Egypt
       </div>
       <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream/90 backdrop-blur">
         <div className="container-page flex h-16 items-center justify-between gap-4">

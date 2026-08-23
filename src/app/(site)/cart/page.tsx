@@ -1,11 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart-context";
-import { formatMoney, shippingFor, SHIPPING_THRESHOLD } from "@/lib/utils";
+import { formatMoney } from "@/lib/utils";
+import type { ShippingSettings } from "@/lib/settings";
 
 export default function CartPage() {
   const { items, subtotal, setQty, remove, clear, ready } = useCart();
+  const [config, setConfig] = useState<ShippingSettings | null>(null);
+
+  useEffect(() => {
+    fetch("/api/settings/public")
+      .then((r) => r.json())
+      .then(setConfig)
+      .catch(() => {});
+  }, []);
+
+  const threshold = config?.freeShippingThreshold ?? 3000;
+  const flatFee = config?.flatShippingFee ?? 60;
+  const shipping = items.length === 0 ? 0 : subtotal >= threshold ? 0 : flatFee;
 
   if (!ready) {
     return (
@@ -30,7 +44,7 @@ export default function CartPage() {
     );
   }
 
-  const shipping = shippingFor(subtotal);
+  
 
   return (
     <div className="container-page py-10">
@@ -136,7 +150,7 @@ export default function CartPage() {
               </div>
               {shipping > 0 && (
                 <p className="rounded-lg bg-clay/10 px-3 py-2 text-xs text-clay">
-                  Add {formatMoney(SHIPPING_THRESHOLD - subtotal)} more for free shipping
+                  Add {formatMoney(threshold - subtotal)} more for free shipping
                 </p>
               )}
               <div className="flex justify-between border-t border-ink/10 pt-4 text-base">

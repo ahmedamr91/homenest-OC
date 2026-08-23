@@ -2,12 +2,13 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
 import { productArt } from "@/lib/art";
+import { getSiteSettings } from "@/lib/settings";
 import NewsletterForm from "./newsletter-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featured, categories, newArrivals] = await Promise.all([
+  const [featured, categories, newArrivals, settings] = await Promise.all([
     db.product.findMany({
       where: { published: true, featured: true },
       include: { colors: true, images: { orderBy: { sort: "asc" }, take: 1 } },
@@ -25,6 +26,7 @@ export default async function HomePage() {
       take: 8,
       orderBy: { createdAt: "desc" },
     }),
+    getSiteSettings(),
   ]);
 
   const ratings = await db.review.groupBy({
@@ -170,9 +172,9 @@ export default async function HomePage() {
       {/* Value props */}
       <section className="container-page grid gap-6 py-14 sm:grid-cols-3">
         {[
-          ["Free shipping", "On every order over EGP 3,000, delivered to your door."],
+          ["Free shipping", `On every order over EGP ${settings.freeShippingThreshold.toLocaleString()}, delivered to your door.`],
           ["Cash on delivery", "Pay only when your order arrives, across Egypt."],
-          ["30-day returns", "Changed your mind? Send it back within 30 days."],
+          [`${settings.returnsDays}-day returns`, settings.returnsNote + "."],
         ].map(([title, desc]) => (
           <div key={title} className="rounded-xl2 bg-white p-6 shadow-card">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-clay/10">

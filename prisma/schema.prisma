@@ -136,6 +136,12 @@ model PageViewDay {
   views Int      @default(0)
 }
 
+model Setting {
+  key       String   @id
+  value     String // JSON
+  updatedAt DateTime @updatedAt
+}
+
 model EmailLog {
   id        Int      @id @default(autoincrement())
   to        String

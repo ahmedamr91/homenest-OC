@@ -2,10 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart-context";
 import { formatMoney } from "@/lib/utils";
-import { EG_CITIES, getCityFee } from "@/lib/shipping";
+import { EG_CITIES } from "@/lib/shipping";
+import type { ShippingSettings } from "@/lib/settings";
 
 export default function CheckoutPage() {
   const { items, subtotal, clear, ready } = useCart();
@@ -14,14 +15,26 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [city, setCity] = useState<string>("Cairo");
+  const [config, setConfig] = useState<ShippingSettings | null>(null);
   const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<{ code: string; discount: number; message: string } | null>(null);
   const [couponMsg, setCouponMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [checkingCoupon, setCheckingCoupon] = useState(false);
 
+  useEffect(() => {
+    fetch("/api/settings/public")
+      .then((r) => r.json())
+      .then(setConfig)
+      .catch(() => {});
+  }, []);
+
   const discount = coupon?.discount ?? 0;
   const discountedSubtotal = Math.max(0, subtotal - discount);
-  const shipping = items.length ? getCityFee(city, discountedSubtotal) : 0;
+  const shipping = (() => {
+    if (!items.length || !config) return 0;
+    if (discountedSubtotal >= config.freeShippingThreshold) return 0;
+    return config.cityFees[city] ?? config.flatShippingFee;
+  })();
   const total = discountedSubtotal + shipping;
 
   async function applyCoupon() {
@@ -145,7 +158,7 @@ export default function CheckoutPage() {
             </div>
             <p className="mt-3 rounded-lg bg-sand/70 px-3 py-2 text-xs text-ink/60">
               🚚 Shipping to <strong>{city}</strong>:{" "}
-              {shipping === 0 ? "FREE" : formatMoney(shipping)} · free everywhere on orders over {formatMoney(3000)}
+              {shipping === 0 ? "FREE" : formatMoney(shipping)} · free everywhere on orders over {formatMoney(config?.freeShippingThreshold ?? 3000)}
             </p>
           </section>
 

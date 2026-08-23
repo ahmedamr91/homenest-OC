@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
-import { formatMoney, SHIPPING_FEE, SHIPPING_THRESHOLD } from "@/lib/utils";
+import { formatMoney } from "@/lib/utils";
+import { getSiteSettings } from "@/lib/settings";
 import AddToCart from "./add-to-cart";
 import ReviewForm from "./review-form";
 
@@ -52,6 +53,7 @@ export default async function ProductPage({
   params: { slug: string };
 }) {
   const product = await getProduct(params.slug);
+  const siteSettings = await getSiteSettings();
   if (!product || !product.published) notFound();
 
   const [related, agg] = await Promise.all([
@@ -155,7 +157,8 @@ export default async function ProductPage({
             <div className="flex justify-between">
               <dt>Shipping</dt>
               <dd className="font-medium text-ink">
-                Free over {formatMoney(SHIPPING_THRESHOLD)} · from {formatMoney(SHIPPING_FEE)}
+                Free over {formatMoney(siteSettings.freeShippingThreshold)} · from{" "}
+                {formatMoney(Math.min(...Object.values(siteSettings.cityFees)))}
               </dd>
             </div>
             <div className="flex justify-between">
@@ -164,7 +167,7 @@ export default async function ProductPage({
             </div>
             <div className="flex justify-between">
               <dt>Returns</dt>
-              <dd className="font-medium text-ink">30 days, no questions asked</dd>
+              <dd className="font-medium text-ink">{siteSettings.returnsNote}</dd>
             </div>
           </dl>
         </div>
