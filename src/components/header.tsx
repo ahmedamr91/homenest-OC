@@ -28,12 +28,13 @@ export default function Header({
   const { count, ready } = useCart();
   const [open, setOpen] = useState(false);
 
-  const nav = [
+  const nav: { href: string; label: string; accent?: boolean }[] = [
     { href: "/shop", label: "Shop All" },
     ...categories.map((c) => ({
       href: `/shop?category=${c.slug}`,
       label: c.name,
     })),
+    { href: "/custom", label: "Make Yours", accent: true },
   ];
 
   return (
@@ -50,8 +51,12 @@ export default function Header({
               <Link
                 key={n.label}
                 href={n.href}
-                className={`text-sm font-medium transition hover:text-clay ${
-                  pathname === n.href.split("?")[0] ? "text-clay" : "text-ink/80"
+                className={`text-sm font-medium transition ${
+                  n.accent
+                    ? "rounded-full bg-clay/10 px-4 py-1.5 font-semibold text-clay hover:bg-clay hover:text-white"
+                    : `hover:text-clay ${
+                        pathname === n.href.split("?")[0] ? "text-clay" : "text-ink/80"
+                      }`
                 }`}
               >
                 {n.label}
