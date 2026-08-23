@@ -2,13 +2,13 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
 import { productArt } from "@/lib/art";
-import { getSiteSettings } from "@/lib/settings";
+import { getSiteSettings, getHomeContent } from "@/lib/settings";
 import NewsletterForm from "./newsletter-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featured, categories, newArrivals, settings] = await Promise.all([
+  const [featured, categories, newArrivals, settings, home] = await Promise.all([
     db.product.findMany({
       where: { published: true, featured: true },
       include: { colors: true, images: { orderBy: { sort: "asc" }, take: 1 } },
@@ -27,6 +27,7 @@ export default async function HomePage() {
       orderBy: { createdAt: "desc" },
     }),
     getSiteSettings(),
+    getHomeContent(),
   ]);
 
   const ratings = await db.review.groupBy({
@@ -57,15 +58,15 @@ export default async function HomePage() {
         <div className="container-page grid items-center gap-10 py-16 sm:py-20 lg:grid-cols-2 lg:py-24">
           <div>
             <p className="mb-4 inline-block rounded-full bg-clay/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-clay">
-              New season · New colors
+              {home.heroBadge}
             </p>
             <h1 className="font-display text-5xl leading-[1.08] text-balance text-ink sm:text-6xl lg:text-[4.2rem]">
-              Beautiful things make a{" "}
-              <span className="italic text-clay">house</span> a home.
+              {home.headlineStart}{" "}
+              <span className="italic text-clay">{home.headlineAccent}</span>{" "}
+              {home.headlineEnd}
             </h1>
             <p className="mt-6 max-w-md text-base leading-relaxed text-ink/60 sm:text-lg">
-              Lamps, vases, cushions and mirrors — every piece available in the
-              colors that fit your space. Choose yours.
+              {home.heroText}
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
               <Link href="/shop" className="btn-primary">

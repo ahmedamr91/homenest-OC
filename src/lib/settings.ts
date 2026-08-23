@@ -48,6 +48,53 @@ export const DEFAULT_SHIPPING_SETTINGS: ShippingSettings = {
 
 const KEY = "shipping";
 
+export type HomeContent = {
+  heroBadge: string;
+  headlineStart: string;
+  headlineAccent: string;
+  headlineEnd: string;
+  heroText: string;
+};
+
+export const DEFAULT_HOME_CONTENT: HomeContent = {
+  heroBadge: "New season · New colors",
+  headlineStart: "Beautiful things make a",
+  headlineAccent: "house",
+  headlineEnd: "a home.",
+  heroText:
+    "Lamps, vases, cushions and mirrors — every piece available in the colors that fit your space. Choose yours.",
+};
+
+const HOME_KEY = "home";
+
+export async function getHomeContent(): Promise<HomeContent> {
+  try {
+    const row = await db.setting.findUnique({ where: { key: HOME_KEY } });
+    if (!row) return DEFAULT_HOME_CONTENT;
+    const parsed = JSON.parse(row.value) as Partial<HomeContent>;
+    const merged = { ...DEFAULT_HOME_CONTENT, ...parsed };
+    return {
+      heroBadge: parsed.heroBadge?.trim() || DEFAULT_HOME_CONTENT.heroBadge,
+      headlineStart:
+        parsed.headlineStart?.trim() || DEFAULT_HOME_CONTENT.headlineStart,
+      headlineAccent:
+        parsed.headlineAccent?.trim() || DEFAULT_HOME_CONTENT.headlineAccent,
+      headlineEnd: parsed.headlineEnd ?? DEFAULT_HOME_CONTENT.headlineEnd,
+      heroText: parsed.heroText?.trim() || DEFAULT_HOME_CONTENT.heroText,
+    };
+  } catch {
+    return DEFAULT_HOME_CONTENT;
+  }
+}
+
+export async function saveHomeContent(next: HomeContent): Promise<void> {
+  await db.setting.upsert({
+    where: { key: HOME_KEY },
+    update: { value: JSON.stringify(next) },
+    create: { key: HOME_KEY, value: JSON.stringify(next) },
+  });
+}
+
 export async function getSiteSettings(): Promise<ShippingSettings> {
   try {
     const row = await db.setting.findUnique({ where: { key: KEY } });
