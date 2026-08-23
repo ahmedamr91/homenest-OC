@@ -95,6 +95,42 @@ export async function saveHomeContent(next: HomeContent): Promise<void> {
   });
 }
 
+export type HeroSlide = {
+  imageUrl: string;
+  headline: string;
+  subtext: string;
+  buttonText: string;
+  href: string;
+};
+
+const SLIDES_KEY = "slides";
+
+export async function getSlides(): Promise<HeroSlide[]> {
+  try {
+    const row = await db.setting.findUnique({ where: { key: SLIDES_KEY } });
+    if (!row) return [];
+    const parsed = JSON.parse(row.value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (s): s is HeroSlide =>
+        s &&
+        typeof s.imageUrl === "string" &&
+        typeof s.buttonText === "string" &&
+        typeof s.href === "string"
+    );
+  } catch {
+    return [];
+  }
+}
+
+export async function saveSlides(next: HeroSlide[]): Promise<void> {
+  await db.setting.upsert({
+    where: { key: SLIDES_KEY },
+    update: { value: JSON.stringify(next) },
+    create: { key: SLIDES_KEY, value: JSON.stringify(next) },
+  });
+}
+
 export async function getSiteSettings(): Promise<ShippingSettings> {
   try {
     const row = await db.setting.findUnique({ where: { key: KEY } });

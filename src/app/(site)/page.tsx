@@ -2,13 +2,14 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
 import { productArt } from "@/lib/art";
-import { getSiteSettings, getHomeContent } from "@/lib/settings";
+import { getSiteSettings, getHomeContent, getSlides } from "@/lib/settings";
 import NewsletterForm from "./newsletter-form";
+import HeroSlideshow from "./hero-slideshow";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featured, categories, newArrivals, settings, home] = await Promise.all([
+  const [featured, categories, newArrivals, settings, home, slides] = await Promise.all([
     db.product.findMany({
       where: { published: true, featured: true },
       include: { colors: true, images: { orderBy: { sort: "asc" }, take: 1 } },
@@ -28,6 +29,7 @@ export default async function HomePage() {
     }),
     getSiteSettings(),
     getHomeContent(),
+    getSlides(),
   ]);
 
   const ratings = await db.review.groupBy({
@@ -54,6 +56,9 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
+      {slides.length > 0 ? (
+        <HeroSlideshow slides={slides} />
+      ) : (
       <section className="relative overflow-hidden">
         <div className="container-page grid items-center gap-10 py-16 sm:py-20 lg:grid-cols-2 lg:py-24">
           <div>
@@ -106,6 +111,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Categories */}
       <section className="container-page py-14">
