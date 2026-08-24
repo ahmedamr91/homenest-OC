@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="Vases and planters collection">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FAF6F0"/>
+      <stop offset="1" stop-color="#EFE5D8"/>
+    </linearGradient>
+    <linearGradient id="clayVase" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#C96A3B"/>
+      <stop offset="0.5" stop-color="#B4552D"/>
+      <stop offset="1" stop-color="#96431F"/>
+    </linearGradient>
+    <linearGradient id="mossVase" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6B7660"/>
+      <stop offset="0.5" stop-color="#5B6650"/>
+      <stop offset="1" stop-color="#49523F"/>
+    </linearGradient>
+    <linearGradient id="sandVase" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E3C6AE"/>
+      <stop offset="0.5" stop-color="#D9B394"/>
+      <stop offset="1" stop-color="#C69B78"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="700" fill="url(#bg)"/>
+
+  <!-- arches -->
+  <path d="M330 700 V300 a170 170 0 0 1 340 0 V700 Z" fill="#E8C4B0" opacity="0.35"/>
+  <path d="M930 700 V260 a190 190 0 0 1 380 0 V700 Z" fill="#B4552D" opacity="0.12"/>
+
+  <!-- text -->
+  <text x="800" y="150" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="bold" letter-spacing="10" fill="#96431F">HANDMADE · VASES &amp; PLANTERS</text>
+  <text x="800" y="268" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="100" fill="#221B15">Shape every <tspan font-style="italic" fill="#B4552D">corner</tspan></text>
+
+  <!-- shelf -->
+  <rect x="360" y="600" width="880" height="10" rx="5" fill="#D9CBB8"/>
+
+  <!-- vases -->
+  <g>
+    <!-- amphora -->
+    <path d="M520 600 c-38 -14 -52 -52 -40 -92 c10 -34 30 -50 26 -78 h48 c-4 28 16 44 26 78 c12 40 -2 78 -40 92 Z" fill="url(#clayVase)"/>
+    <rect x="506" y="414" width="48" height="18" rx="6" fill="#96431F"/>
+    <ellipse cx="536" cy="500" rx="10" ry="42" fill="#FAF6F0" opacity="0.25"/>
+    <!-- sprigs -->
+    <g stroke="#5B6650" stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M530 402 C528 360 512 340 498 322"/>
+      <path d="M542 402 C548 356 566 336 584 320"/>
+      <path d="M536 402 C536 350 536 330 536 306"/>
+    </g>
+    <g fill="#5B6650">
+      <ellipse cx="498" cy="318" rx="7" ry="12" transform="rotate(-30 498 318)"/>
+      <ellipse cx="584" cy="316" rx="7" ry="12" transform="rotate(28 584 316)"/>
+      <ellipse cx="536" cy="300" rx="7" ry="12"/>
+    </g>
+  </g>
+  <g>
+    <!-- round belly vase -->
+    <path d="M790 600 c-70 0 -108 -44 -108 -102 c0 -62 46 -104 84 -104 l10 -26 h28 l10 26 c38 0 84 42 84 104 c0 58 -38 102 -108 102 Z" fill="url(#mossVase)"/>
+    <ellipse cx="768" cy="492" rx="12" ry="52" fill="#FAF6F0" opacity="0.22"/>
+    <!-- dried stems -->
+    <g stroke="#B4552D" stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M790 368 C786 320 768 296 750 274"/>
+      <path d="M802 368 C812 314 834 292 856 276"/>
+    </g>
+    <g fill="#C96A3B">
+      <circle cx="750" cy="270" r="8"/>
+      <circle cx="856" cy="272" r="8"/>
+      <circle cx="798" cy="330" r="6"/>
+    </g>
+  </g>
+  <g>
+    <!-- bottle vase -->
+    <path d="M1040 600 c-44 0 -70 -30 -70 -74 c0 -36 20 -60 40 -70 l6 -84 h48 l6 84 c20 10 40 34 40 70 c0 44 -26 74 -70 74 Z" fill="url(#sandVase)"/>
+    <ellipse cx="1024" cy="520" rx="9" ry="40" fill="#FAF6F0" opacity="0.3"/>
+  </g>
+
+  <!-- brand mark -->
+  <g text-anchor="middle">
+    <text x="800" y="672" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" letter-spacing="8" fill="#221B15" opacity="0.75">EMPTY CORNER</text>
+  </g>
+</svg>
