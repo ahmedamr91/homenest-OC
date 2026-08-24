@@ -8,6 +8,7 @@ export type ShippingSettings = {
   cityFees: Record<string, number>;
   returnsDays: number;
   returnsNote: string;
+  whatsappBot: boolean;
 };
 
 export const DEFAULT_SHIPPING_SETTINGS: ShippingSettings = {
@@ -44,6 +45,7 @@ export const DEFAULT_SHIPPING_SETTINGS: ShippingSettings = {
   },
   returnsDays: 30,
   returnsNote: "30 days, no questions asked",
+  whatsappBot: false,
 };
 
 const KEY = "shipping";

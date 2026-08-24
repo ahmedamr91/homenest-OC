@@ -12,6 +12,7 @@ const settingsSchema = z.object({
   cityFees: cityFeesSchema,
   returnsDays: z.number().int().min(0).max(365),
   returnsNote: z.string().trim().max(200),
+  whatsappBot: z.boolean().optional().default(false),
 });
 
 export async function GET() {

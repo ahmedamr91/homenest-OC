@@ -40,6 +40,16 @@ export function orderNumber(): string {
   return `HN-${t}-${r}`;
 }
 
+/** Public origin of the storefront (env-driven with Vercel fallbacks). */
+export function siteUrl(): string {
+  const raw =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    process.env.VERCEL_URL ||
+    "http://localhost:3000";
+  return raw.startsWith("http") ? raw : `https://${raw}`;
+}
+
 export const CUSTOM_STATUSES = [
   "NEW",
   "REVIEWING",

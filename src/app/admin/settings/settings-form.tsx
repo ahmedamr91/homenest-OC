@@ -17,6 +17,7 @@ export default function SettingsForm({
   });
   const [returnsDays, setReturnsDays] = useState(String(initial.returnsDays));
   const [returnsNote, setReturnsNote] = useState(initial.returnsNote);
+  const [whatsappBot, setWhatsappBot] = useState(initial.whatsappBot);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,6 +37,7 @@ export default function SettingsForm({
         cityFees,
         returnsDays: Number(returnsDays) || 0,
         returnsNote: returnsNote.trim() || "30 days, no questions asked",
+        whatsappBot,
       };
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
@@ -154,6 +156,28 @@ export default function SettingsForm({
               />
             </div>
           </div>
+        </section>
+
+        <section className="card p-6">
+          <h2 className="mb-1 font-semibold">WhatsApp bot</h2>
+          <p className="mb-4 text-sm text-ink/60">
+            Auto-replies to customers who message your WhatsApp Business
+            number: order status by order number, catalog link, and a
+            hand-off note for anything else.
+          </p>
+          <label className="flex cursor-pointer items-center gap-3 text-sm font-medium">
+            <input
+              type="checkbox"
+              checked={whatsappBot}
+              onChange={(e) => setWhatsappBot(e.target.checked)}
+              className="h-4 w-4 accent-[#B4552D]"
+            />
+            Enable the WhatsApp bot
+          </label>
+          <p className="mt-2 text-xs text-ink/50">
+            Requires the WhatsApp env vars to be configured on the server —
+            otherwise the bot stays silent even when enabled.
+          </p>
         </section>
       </div>
 

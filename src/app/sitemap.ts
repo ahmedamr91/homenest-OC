@@ -1,19 +1,11 @@
 import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
-
-function baseUrl(): string {
-  const raw =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
-    process.env.VERCEL_URL ||
-    "http://localhost:3000";
-  return raw.startsWith("http") ? raw : `https://${raw}`;
-}
+import { siteUrl } from "@/lib/utils";
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = baseUrl();
+  const base = siteUrl();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     "",
