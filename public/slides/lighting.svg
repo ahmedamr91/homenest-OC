@@ -28,24 +28,24 @@
   <rect width="1600" height="700" fill="url(#halo)"/>
 
   <g stroke="#4A3A2A" stroke-width="3">
-    <line x1="540" y1="0" x2="540" y2="120"/>
-    <line x1="800" y1="0" x2="800" y2="60"/>
-    <line x1="1060" y1="0" x2="1060" y2="150"/>
+    <line x1="540" y1="0" x2="540" y2="230"/>
+    <line x1="800" y1="0" x2="800" y2="180"/>
+    <line x1="1060" y1="0" x2="1060" y2="260"/>
   </g>
   <g>
-    <path d="M485 120 a55 48 0 0 1 110 0 Z" fill="url(#shade)"/>
-    <circle cx="540" cy="138" r="46" fill="url(#bulb)"/>
-    <circle cx="540" cy="132" r="10" fill="#FFE8C2"/>
+    <path d="M485 230 a55 48 0 0 1 110 0 Z" fill="url(#shade)"/>
+    <circle cx="540" cy="248" r="46" fill="url(#bulb)"/>
+    <circle cx="540" cy="242" r="10" fill="#FFE8C2"/>
   </g>
   <g>
-    <path d="M730 60 a70 60 0 0 1 140 0 Z" fill="url(#shade2)"/>
-    <circle cx="800" cy="84" r="60" fill="url(#bulb)"/>
-    <circle cx="800" cy="76" r="13" fill="#FFE8C2"/>
+    <path d="M730 180 a70 60 0 0 1 140 0 Z" fill="url(#shade2)"/>
+    <circle cx="800" cy="204" r="60" fill="url(#bulb)"/>
+    <circle cx="800" cy="196" r="13" fill="#FFE8C2"/>
   </g>
   <g>
-    <path d="M1010 150 a50 44 0 0 1 100 0 Z" fill="url(#shade)"/>
-    <circle cx="1060" cy="166" r="42" fill="url(#bulb)"/>
-    <circle cx="1060" cy="161" r="9" fill="#FFE8C2"/>
+    <path d="M1010 260 a50 44 0 0 1 100 0 Z" fill="url(#shade)"/>
+    <circle cx="1060" cy="276" r="42" fill="url(#bulb)"/>
+    <circle cx="1060" cy="271" r="9" fill="#FFE8C2"/>
   </g>
 
   <g fill="#FFC98A">

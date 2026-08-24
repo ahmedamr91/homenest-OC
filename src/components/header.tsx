@@ -19,7 +19,6 @@ type NavCategory = { name: string; slug: string };
 
 export default function Header({
   freeThreshold = 3000,
-  categories = [],
 }: {
   freeThreshold?: number;
   categories?: NavCategory[];
@@ -28,14 +27,13 @@ export default function Header({
   const { count, ready } = useCart();
   const [open, setOpen] = useState(false);
 
-  const nav: { href: string; label: string; accent?: boolean }[] = [
-    { href: "/shop", label: "Shop All" },
-    ...categories.map((c) => ({
-      href: `/shop?category=${c.slug}`,
-      label: c.name,
-    })),
-    { href: "/custom", label: "Make Yours", accent: true },
+  const nav = [
+    { href: "/", label: "Home" },
+    { href: "/shop", label: "Shop" },
   ];
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <>
@@ -46,17 +44,15 @@ export default function Header({
         <div className="container-page flex h-16 items-center justify-between gap-4">
           <Logo height={56} />
 
-          <nav className="hidden md:flex items-center gap-7">
+          <nav className="hidden md:flex items-center gap-10">
             {nav.map((n) => (
               <Link
                 key={n.label}
                 href={n.href}
-                className={`text-sm font-medium transition ${
-                  n.accent
-                    ? "rounded-full bg-clay/10 px-4 py-1.5 font-semibold text-clay hover:bg-clay hover:text-white"
-                    : `hover:text-clay ${
-                        pathname === n.href.split("?")[0] ? "text-clay" : "text-ink/80"
-                      }`
+                className={`relative pb-1 text-[13px] font-bold uppercase tracking-[0.18em] transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:rounded-full after:bg-clay after:transition-all after:duration-300 ${
+                  isActive(n.href)
+                    ? "text-clay after:w-full"
+                    : "text-ink/70 after:w-0 hover:text-clay hover:after:w-full"
                 }`}
               >
                 {n.label}
@@ -97,7 +93,9 @@ export default function Header({
                   key={n.label}
                   href={n.href}
                   onClick={() => setOpen(false)}
-                  className="py-2.5 text-sm font-medium text-ink/80 hover:text-clay"
+                  className={`py-2.5 text-sm font-bold uppercase tracking-[0.18em] ${
+                    isActive(n.href) ? "text-clay" : "text-ink/80"
+                  }`}
                 >
                   {n.label}
                 </Link>

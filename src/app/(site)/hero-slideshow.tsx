@@ -24,7 +24,7 @@ export default function HeroSlideshow({ slides }: { slides: HeroSlide[] }) {
 
   return (
     <section
-      className="relative h-[440px] w-full overflow-hidden bg-ink md:aspect-[16/7] md:h-auto md:max-h-[660px]"
+      className="relative h-[360px] w-full overflow-hidden bg-ink md:aspect-[16/7] md:h-auto md:max-h-[520px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
