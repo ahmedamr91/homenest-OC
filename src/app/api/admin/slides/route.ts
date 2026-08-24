@@ -5,11 +5,19 @@ import { requireAdmin, readJson } from "@/lib/admin-guard";
 import { revalidateStorefront } from "@/lib/revalidate";
 
 const slideSchema = z.object({
-  imageUrl: z.string().trim().url().max(1000),
+  imageUrl: z
+    .string()
+    .trim()
+    .min(1)
+    .max(1000)
+    .refine((v) => /^https?:\/\//.test(v) || v.startsWith("/"), {
+      message: "Image must be a URL or a /path",
+    }),
   headline: z.string().trim().max(80).default(""),
   subtext: z.string().trim().max(200).default(""),
   buttonText: z.string().trim().min(1).max(40),
   href: z.string().trim().min(1).max(300),
+  theme: z.enum(["dark", "light"]).optional(),
 });
 
 const slidesSchema = z.object({

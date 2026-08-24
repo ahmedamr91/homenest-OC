@@ -103,6 +103,8 @@ export type HeroSlide = {
   subtext: string;
   buttonText: string;
   href: string;
+  /** Artwork brightness — picks text color & scrim. Defaults to "dark". */
+  theme?: "dark" | "light";
 };
 
 const SLIDES_KEY = "slides";

@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="Lighting collection">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="Pendant lamps">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#2E2318"/>
       <stop offset="1" stop-color="#191310"/>
     </linearGradient>
-    <radialGradient id="halo" cx="0.5" cy="0.35" r="0.75">
-      <stop offset="0" stop-color="#B4552D" stop-opacity="0.55"/>
-      <stop offset="0.5" stop-color="#B4552D" stop-opacity="0.18"/>
+    <radialGradient id="halo" cx="0.5" cy="0.2" r="0.8">
+      <stop offset="0" stop-color="#B4552D" stop-opacity="0.5"/>
+      <stop offset="0.55" stop-color="#B4552D" stop-opacity="0.15"/>
       <stop offset="1" stop-color="#B4552D" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="bulb" cx="0.5" cy="0.5" r="0.5">
@@ -27,43 +27,33 @@
   <rect width="1600" height="700" fill="url(#bg)"/>
   <rect width="1600" height="700" fill="url(#halo)"/>
 
-  <!-- pendant lamps -->
   <g stroke="#4A3A2A" stroke-width="3">
-    <line x1="560" y1="0" x2="560" y2="150"/>
-    <line x1="800" y1="0" x2="800" y2="90"/>
-    <line x1="1040" y1="0" x2="1040" y2="180"/>
+    <line x1="540" y1="0" x2="540" y2="120"/>
+    <line x1="800" y1="0" x2="800" y2="60"/>
+    <line x1="1060" y1="0" x2="1060" y2="150"/>
   </g>
   <g>
-    <path d="M505 150 a55 48 0 0 1 110 0 Z" fill="url(#shade)"/>
-    <circle cx="560" cy="168" r="46" fill="url(#bulb)"/>
-    <circle cx="560" cy="162" r="10" fill="#FFE8C2"/>
+    <path d="M485 120 a55 48 0 0 1 110 0 Z" fill="url(#shade)"/>
+    <circle cx="540" cy="138" r="46" fill="url(#bulb)"/>
+    <circle cx="540" cy="132" r="10" fill="#FFE8C2"/>
   </g>
   <g>
-    <path d="M735 90 a65 56 0 0 1 130 0 Z" fill="url(#shade2)"/>
-    <circle cx="800" cy="112" r="56" fill="url(#bulb)"/>
-    <circle cx="800" cy="104" r="12" fill="#FFE8C2"/>
+    <path d="M730 60 a70 60 0 0 1 140 0 Z" fill="url(#shade2)"/>
+    <circle cx="800" cy="84" r="60" fill="url(#bulb)"/>
+    <circle cx="800" cy="76" r="13" fill="#FFE8C2"/>
   </g>
   <g>
-    <path d="M990 180 a50 44 0 0 1 100 0 Z" fill="url(#shade)"/>
-    <circle cx="1040" cy="196" r="42" fill="url(#bulb)"/>
-    <circle cx="1040" cy="191" r="9" fill="#FFE8C2"/>
+    <path d="M1010 150 a50 44 0 0 1 100 0 Z" fill="url(#shade)"/>
+    <circle cx="1060" cy="166" r="42" fill="url(#bulb)"/>
+    <circle cx="1060" cy="161" r="9" fill="#FFE8C2"/>
   </g>
 
-  <!-- floating light dots -->
   <g fill="#FFC98A">
-    <circle cx="380" cy="300" r="3" opacity="0.5"/>
-    <circle cx="1240" cy="260" r="4" opacity="0.4"/>
-    <circle cx="1330" cy="420" r="2.5" opacity="0.5"/>
-    <circle cx="300" cy="480" r="2.5" opacity="0.35"/>
-  </g>
-
-  <!-- text -->
-  <text x="800" y="392" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="bold" letter-spacing="10" fill="#E8C4B0">LIGHTING COLLECTION</text>
-  <text x="800" y="505" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="100" fill="#FAF6F0">Light up your <tspan font-style="italic" fill="#E8A25C">evenings</tspan></text>
-
-  <!-- brand mark -->
-  <g text-anchor="middle">
-    <rect x="740" y="570" width="120" height="2" fill="#B4552D"/>
-    <text x="800" y="622" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" letter-spacing="8" fill="#FAF6F0" opacity="0.85">EMPTY CORNER</text>
+    <circle cx="360" cy="330" r="3" opacity="0.5"/>
+    <circle cx="1260" cy="300" r="4" opacity="0.4"/>
+    <circle cx="1360" cy="480" r="2.5" opacity="0.5"/>
+    <circle cx="260" cy="520" r="2.5" opacity="0.35"/>
+    <circle cx="1180" cy="560" r="3" opacity="0.4"/>
+    <circle cx="430" cy="600" r="2.5" opacity="0.3"/>
   </g>
 </svg>

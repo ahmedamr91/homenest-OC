@@ -151,6 +151,18 @@ export default function SlidesEditor({
                   <input id={`s-btn-${i}`} maxLength={40} value={s.buttonText} onChange={(e) => update(i, { buttonText: e.target.value })} className="input" placeholder="Shop Lighting" />
                 </div>
                 <div>
+                  <label className="label" htmlFor={`s-theme-${i}`}>Text color</label>
+                  <select
+                    id={`s-theme-${i}`}
+                    value={s.theme === "light" ? "light" : "dark"}
+                    onChange={(e) => update(i, { theme: e.target.value as "dark" | "light" })}
+                    className="input cursor-pointer"
+                  >
+                    <option value="dark">Light text (dark artwork)</option>
+                    <option value="light">Dark text (light artwork)</option>
+                  </select>
+                </div>
+                <div>
                   <label className="label" htmlFor={`s-link-${i}`}>Links to *</label>
                   <select
                     id={`s-link-${i}`}
