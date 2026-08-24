@@ -37,7 +37,7 @@ function detectImageType(buf: Buffer): "jpeg" | "png" | "webp" | null {
 
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
-  const rl = rateLimit(`custom:${ip}`, 5, 60_000);
+  const rl = await rateLimit(`custom:${ip}`, 5, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Too many submissions. Please wait a minute." },

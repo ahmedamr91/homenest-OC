@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   const guard = await requireAdmin();
   if ("error" in guard) return guard.error;
 
-  const rl = rateLimit(`imgup:${getClientIp(req.headers)}`, 30, 60_000);
+  const rl = await rateLimit(`imgup:${getClientIp(req.headers)}`, 30, 60_000);
   if (!rl.ok)
     return NextResponse.json({ error: "Slow down." }, { status: 429 });
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { productSchema, slugify } from "@/lib/validators";
 import { requireAdmin, readJson } from "@/lib/admin-guard";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 export async function GET() {
   const guard = await requireAdmin();
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
       },
       include: { colors: true, images: true },
     });
+    revalidateStorefront();
     return NextResponse.json({ ok: true, id: product.id }, { status: 201 });
   } catch {
     return NextResponse.json(

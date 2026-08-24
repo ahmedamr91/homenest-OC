@@ -8,7 +8,7 @@ import { getSiteSettings } from "@/lib/settings";
 import AddToCart from "./add-to-cart";
 import ReviewForm from "./review-form";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 async function getProduct(slug: string) {
   return db.product.findUnique({

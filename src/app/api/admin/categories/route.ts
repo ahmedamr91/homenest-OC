@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { categorySchema, slugify } from "@/lib/validators";
 import { requireAdmin, readJson } from "@/lib/admin-guard";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 export async function GET() {
   const guard = await requireAdmin();
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
         imageUrl: parsed.data.imageUrl ?? null,
       },
     });
+    revalidateStorefront();
     return NextResponse.json({ ok: true, id: category.id }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Could not create the category." }, { status: 500 });

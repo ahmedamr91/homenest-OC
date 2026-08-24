@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-guard";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 type Params = { params: { id: string } };
 
@@ -18,6 +19,7 @@ export async function PATCH(_req: Request, { params }: Params) {
 
   try {
     await db.review.update({ where: { id }, data: { approved: true } });
+    revalidateStorefront();
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Review not found." }, { status: 404 });

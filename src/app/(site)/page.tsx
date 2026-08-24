@@ -6,7 +6,7 @@ import { getSiteSettings, getHomeContent, getSlides } from "@/lib/settings";
 import NewsletterForm from "./newsletter-form";
 import HeroSlideshow from "./hero-slideshow";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [featured, categories, newArrivals, settings, home, slides] = await Promise.all([

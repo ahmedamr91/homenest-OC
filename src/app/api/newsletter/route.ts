@@ -7,7 +7,7 @@ import { rateLimit, getClientIp } from "@/lib/rate-limit";
 const schema = z.object({ email: z.string().trim().email().max(200) });
 
 export async function POST(req: Request) {
-  const rl = rateLimit(`news:${getClientIp(req.headers)}`, 5, 60_000);
+  const rl = await rateLimit(`news:${getClientIp(req.headers)}`, 5, 60_000);
   if (!rl.ok)
     return NextResponse.json({ error: "Too many attempts." }, { status: 429 });
 

@@ -9,7 +9,7 @@ const schema = z.object({
 });
 
 export async function POST(req: Request) {
-  const rl = rateLimit(`coupon:${getClientIp(req.headers)}`, 20, 60_000);
+  const rl = await rateLimit(`coupon:${getClientIp(req.headers)}`, 20, 60_000);
   if (!rl.ok)
     return NextResponse.json({ error: "Too many attempts." }, { status: 429 });
 

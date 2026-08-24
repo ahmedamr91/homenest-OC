@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getHomeContent, saveHomeContent } from "@/lib/settings";
 import { requireAdmin, readJson } from "@/lib/admin-guard";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 const homeSchema = z.object({
   heroBadge: z.string().trim().min(1).max(60),
@@ -34,5 +35,6 @@ export async function PUT(req: Request) {
   }
 
   await saveHomeContent(parsed.data);
+  revalidateStorefront();
   return NextResponse.json({ ok: true, home: parsed.data });
 }

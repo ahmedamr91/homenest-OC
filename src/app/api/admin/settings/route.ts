@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSiteSettings, saveSiteSettings } from "@/lib/settings";
 import { requireAdmin, readJson } from "@/lib/admin-guard";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 const cityFeesSchema = z.record(z.number().min(0).max(100000));
 
@@ -35,5 +36,6 @@ export async function PUT(req: Request) {
     );
 
   await saveSiteSettings(parsed.data);
+  revalidateStorefront();
   return NextResponse.json({ ok: true, settings: parsed.data });
 }

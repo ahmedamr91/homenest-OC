@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const ua = req.headers.get("user-agent") || "";
   if (BOT_RE.test(ua)) return NextResponse.json({ ok: false, bot: true });
 
-  const rl = rateLimit(`track:${ip}`, 60, 60_000);
+  const rl = await rateLimit(`track:${ip}`, 60, 60_000);
   if (!rl.ok) return NextResponse.json({ ok: true });
 
   let path = "/";

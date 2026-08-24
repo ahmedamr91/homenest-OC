@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { productSchema } from "@/lib/validators";
 import { requireAdmin, readJson } from "@/lib/admin-guard";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 type Params = { params: { id: string } };
 
@@ -68,6 +69,7 @@ export async function PUT(req: Request, { params }: Params) {
         },
       });
     });
+    revalidateStorefront();
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(
@@ -89,6 +91,7 @@ export async function DELETE(_req: Request, { params }: Params) {
     if (used > 0) {
       // Product is referenced by orders — unpublish instead of hard delete
       await db.product.update({ where: { id }, data: { published: false } });
+      revalidateStorefront();
       return NextResponse.json({
         ok: true,
         unpublished: true,

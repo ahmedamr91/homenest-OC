@@ -8,10 +8,11 @@ import {
   sendNewOrderAlert,
   sendOrderConfirmation,
 } from "@/lib/email";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
-  const rl = rateLimit(`order:${ip}`, 10, 60_000);
+  const rl = await rateLimit(`order:${ip}`, 10, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Too many attempts. Please wait a minute." },
@@ -168,6 +169,9 @@ export async function POST(req: Request) {
       discountCode: result.discountCode,
       lowStock,
     }).catch(() => {});
+
+    // Stock changed → refresh cached pages that show availability
+    revalidateStorefront();
 
     return NextResponse.json({ ok: true, number: result.number });
   } catch (err) {

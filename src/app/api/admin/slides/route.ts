@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSlides, saveSlides } from "@/lib/settings";
 import { requireAdmin, readJson } from "@/lib/admin-guard";
+import { revalidateStorefront } from "@/lib/revalidate";
 
 const slideSchema = z.object({
   imageUrl: z.string().trim().url().max(1000),
@@ -38,5 +39,6 @@ export async function PUT(req: Request) {
   }
 
   await saveSlides(parsed.data.slides);
+  revalidateStorefront();
   return NextResponse.json({ ok: true, slides: parsed.data.slides });
 }

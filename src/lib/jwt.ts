@@ -7,7 +7,16 @@ export type SessionPayload = {
 };
 
 function secretKey() {
-  const secret = process.env.AUTH_SECRET || "insecure-dev-secret-change-me";
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "AUTH_SECRET is not set. Refusing to sign/verify sessions with an insecure fallback."
+      );
+    }
+    // Local dev fallback only — never used in production.
+    return new TextEncoder().encode("insecure-dev-secret-change-me");
+  }
   return new TextEncoder().encode(secret);
 }
 
