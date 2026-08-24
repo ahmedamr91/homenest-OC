@@ -41,8 +41,8 @@ export default function Header({
         Free shipping on orders over EGP {freeThreshold.toLocaleString()} · Cash on delivery across Egypt
       </div>
       <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream/90 backdrop-blur">
-        <div className="container-page flex h-16 items-center justify-between gap-4">
-          <Logo height={56} />
+        <div className="container-page flex h-20 items-center justify-between gap-4">
+          <Logo height={64} />
 
           <nav className="hidden md:flex items-center gap-10">
             {nav.map((n) => (

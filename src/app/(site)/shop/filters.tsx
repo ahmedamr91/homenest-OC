@@ -28,7 +28,7 @@ export default function ShopFilters({ categories, colors, current }: Props) {
   }
 
   return (
-    <aside className="space-y-7 lg:sticky lg:top-24 lg:self-start">
+    <aside className="space-y-7 lg:sticky lg:top-28 lg:self-start">
       <form
         onSubmit={(e) => {
           e.preventDefault();

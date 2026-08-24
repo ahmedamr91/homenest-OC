@@ -176,7 +176,7 @@ export default function CheckoutPage() {
           </section>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="lg:sticky lg:top-28 lg:self-start">
           <div className="card p-6">
             <h2 className="font-display text-xl">Your order</h2>
             <ul className="mt-4 max-h-56 space-y-3 overflow-auto pr-1 text-sm">

@@ -130,7 +130,7 @@ export default function CartPage() {
           </button>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="lg:sticky lg:top-28 lg:self-start">
           <div className="card p-6">
             <h2 className="font-display text-2xl">Order summary</h2>
             <dl className="mt-5 space-y-3 text-sm">
