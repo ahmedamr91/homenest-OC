@@ -2,14 +2,14 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
 import { productArt } from "@/lib/art";
-import { getSiteSettings, getHomeContent, getSlides } from "@/lib/settings";
+import { getSiteSettings, getHomeContent, getSlides, getCustomBanner } from "@/lib/settings";
 import NewsletterForm from "./newsletter-form";
 import HeroSlideshow from "./hero-slideshow";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [featured, categories, newArrivals, settings, home, slides] = await Promise.all([
+  const [featured, categories, newArrivals, settings, home, slides, banner] = await Promise.all([
     db.product.findMany({
       where: { published: true, featured: true },
       include: { colors: true, images: { orderBy: { sort: "asc" }, take: 1 } },
@@ -30,6 +30,7 @@ export default async function HomePage() {
     getSiteSettings(),
     getHomeContent(),
     getSlides(),
+    getCustomBanner(),
   ]);
 
   const ratings = await db.review.groupBy({
@@ -208,32 +209,49 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Custom orders banner */}
-      <section className="container-page pb-4">
-        <Link
-          href="/custom"
-          className="group relative block overflow-hidden rounded-xl2 bg-ink px-6 py-12 sm:px-12"
-        >
-          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-clay/20 blur-3xl transition group-hover:bg-clay/30" />
-          <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+      {/* Custom orders banner — full-width, 3:1, photo layer + fixed button layer */}
+      <section className="relative w-full overflow-hidden bg-ink">
+        <div className="relative h-[240px] w-full md:aspect-[3/1] md:h-auto md:max-h-[420px]">
+          {banner.imageUrl && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={banner.imageUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/70 to-ink/40" />
+
+          <div className="container-page relative flex h-full flex-col items-start justify-center gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="mb-3 inline-block rounded-full bg-clay px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
-                New service
-              </p>
+              {banner.badge && (
+                <p className="mb-3 inline-block rounded-full bg-clay px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
+                  {banner.badge}
+                </p>
+              )}
               <h2 className="font-display text-3xl leading-snug text-cream sm:text-4xl">
-                Have a piece in mind? <span className="italic text-clay-light">We&apos;ll make it.</span>
+                {banner.headlineStart}{" "}
+                {banner.headlineAccent && (
+                  <span className="italic text-clay-light">
+                    {banner.headlineAccent}
+                  </span>
+                )}
               </h2>
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-cream/70">
-                Send us a photo of your dream piece, pick your colors, and our
-                makers will bring it to life. Quote within 48 hours.
-              </p>
+              {banner.subtext && (
+                <p className="mt-3 max-w-lg text-sm leading-relaxed text-cream/70">
+                  {banner.subtext}
+                </p>
+              )}
             </div>
-            <span className="btn-primary shrink-0 !bg-clay hover:!bg-clay-dark">
-              Make it yours
+            <Link
+              href={banner.href}
+              className="btn-primary shrink-0 !bg-clay hover:!bg-clay-dark"
+            >
+              {banner.buttonText}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </span>
+            </Link>
           </div>
-        </Link>
+        </div>
       </section>
 
       {/* Newsletter */}

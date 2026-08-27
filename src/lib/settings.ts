@@ -135,6 +135,58 @@ export async function saveSlides(next: HeroSlide[]): Promise<void> {
   });
 }
 
+export type CustomBanner = {
+  /** Optional background photo — empty keeps the plain dark banner. */
+  imageUrl: string;
+  badge: string;
+  headlineStart: string;
+  headlineAccent: string;
+  subtext: string;
+  buttonText: string;
+  href: string;
+};
+
+export const DEFAULT_CUSTOM_BANNER: CustomBanner = {
+  imageUrl: "",
+  badge: "New service",
+  headlineStart: "Have a piece in mind?",
+  headlineAccent: "We'll make it.",
+  subtext:
+    "Send us a photo of your dream piece, pick your colors, and our makers will bring it to life. Quote within 48 hours.",
+  buttonText: "Make it yours",
+  href: "/custom",
+};
+
+const BANNER_KEY = "customBanner";
+
+export async function getCustomBanner(): Promise<CustomBanner> {
+  try {
+    const row = await db.setting.findUnique({ where: { key: BANNER_KEY } });
+    if (!row) return DEFAULT_CUSTOM_BANNER;
+    const parsed = JSON.parse(row.value) as Partial<CustomBanner>;
+    const d = DEFAULT_CUSTOM_BANNER;
+    return {
+      imageUrl: typeof parsed.imageUrl === "string" ? parsed.imageUrl : d.imageUrl,
+      badge: parsed.badge?.trim() || d.badge,
+      headlineStart: parsed.headlineStart?.trim() || d.headlineStart,
+      headlineAccent: parsed.headlineAccent ?? d.headlineAccent,
+      subtext: parsed.subtext?.trim() || d.subtext,
+      buttonText: parsed.buttonText?.trim() || d.buttonText,
+      href: parsed.href?.trim() || d.href,
+    };
+  } catch {
+    return DEFAULT_CUSTOM_BANNER;
+  }
+}
+
+export async function saveCustomBanner(next: CustomBanner): Promise<void> {
+  await db.setting.upsert({
+    where: { key: BANNER_KEY },
+    update: { value: JSON.stringify(next) },
+    create: { key: BANNER_KEY, value: JSON.stringify(next) },
+  });
+}
+
 export async function getSiteSettings(): Promise<ShippingSettings> {
   try {
     const row = await db.setting.findUnique({ where: { key: KEY } });

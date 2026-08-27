@@ -1,14 +1,16 @@
 import { db } from "@/lib/db";
-import { getHomeContent, getSlides } from "@/lib/settings";
+import { getCustomBanner, getHomeContent, getSlides } from "@/lib/settings";
 import HomeForm from "./home-form";
 import SlidesEditor from "./slides-editor";
+import CustomBannerEditor from "./custom-banner-editor";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminHomePage() {
-  const [home, slides, categories] = await Promise.all([
+  const [home, slides, banner, categories] = await Promise.all([
     getHomeContent(),
     getSlides(),
+    getCustomBanner(),
     db.category.findMany({
       orderBy: { name: "asc" },
       select: { name: true, slug: true },
@@ -25,6 +27,7 @@ export default async function AdminHomePage() {
       </p>
       <HomeForm initial={home} />
       <SlidesEditor initial={slides} categories={categories} />
+      <CustomBannerEditor initial={banner} />
     </div>
   );
 }
