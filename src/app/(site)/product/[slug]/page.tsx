@@ -7,6 +7,7 @@ import { formatMoney } from "@/lib/utils";
 import { getSiteSettings } from "@/lib/settings";
 import AddToCart from "./add-to-cart";
 import ReviewForm from "./review-form";
+import ProductAccordions from "./product-accordions";
 
 export const revalidate = 300;
 
@@ -151,29 +152,19 @@ export default async function ProductPage({
             )}
           </div>
 
-          <p className="mt-6 leading-relaxed text-ink/70">{product.description}</p>
-
-          <dl className="mt-8 space-y-2 border-t border-ink/10 pt-6 text-sm text-ink/60">
-            <div className="flex justify-between">
-              <dt>Shipping</dt>
-              <dd className="font-medium text-ink">
-                Free over {formatMoney(siteSettings.freeShippingThreshold)} · from{" "}
-                {formatMoney(Math.min(...Object.values(siteSettings.cityFees)))}
-              </dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Payment</dt>
-              <dd className="font-medium text-ink">Cash on delivery</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Returns</dt>
-              <dd className="font-medium text-ink">
-                {product.returnDays != null
-                  ? `${product.returnDays}-day easy returns`
-                  : siteSettings.returnsNote}
-              </dd>
-            </div>
-          </dl>
+          <ProductAccordions
+            items={[
+              { title: "Description", content: product.description },
+              { title: "Additional information", content: product.additionalInfo ?? null },
+              {
+                title: "Shipping & Return Policy",
+                content:
+                  product.shippingPolicy ??
+                  `Shipping: Free over ${formatMoney(siteSettings.freeShippingThreshold)} · from ${formatMoney(Math.min(...Object.values(siteSettings.cityFees)))}\nPayment: Cash on delivery\nReturns: ${product.returnDays != null ? `${product.returnDays}-day easy returns` : siteSettings.returnsNote}`,
+              },
+              { title: "Product Specifications", content: product.specifications ?? null },
+            ]}
+          />
         </div>
       </div>
 

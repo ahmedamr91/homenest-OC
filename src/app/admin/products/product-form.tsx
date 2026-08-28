@@ -11,6 +11,9 @@ export type ProductFormValues = {
   id?: number;
   name: string;
   description: string;
+  additionalInfo: string | null;
+  shippingPolicy: string | null;
+  specifications: string | null;
   price: number;
   comparePrice: number | null;
   stock: number;
@@ -42,6 +45,9 @@ export default function ProductForm({
 
   const [name, setName] = useState(initial.name);
   const [description, setDescription] = useState(initial.description);
+  const [additionalInfo, setAdditionalInfo] = useState(initial.additionalInfo || "");
+  const [shippingPolicy, setShippingPolicy] = useState(initial.shippingPolicy || "");
+  const [specifications, setSpecifications] = useState(initial.specifications || "");
   const [price, setPrice] = useState(String(initial.price || ""));
   const [comparePrice, setComparePrice] = useState(
     initial.comparePrice != null ? String(initial.comparePrice) : ""
@@ -119,6 +125,9 @@ export default function ProductForm({
           body: JSON.stringify({
             name,
             description,
+            additionalInfo: additionalInfo.trim() === "" ? null : additionalInfo.trim(),
+            shippingPolicy: shippingPolicy.trim() === "" ? null : shippingPolicy.trim(),
+            specifications: specifications.trim() === "" ? null : specifications.trim(),
             price: Number(price),
             comparePrice: comparePrice === "" ? null : Number(comparePrice),
             stock: Number(stock),
@@ -203,6 +212,25 @@ export default function ProductForm({
                 <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="h-4 w-4 accent-[#B4552D]" />
                 Featured on homepage
               </label>
+            </div>
+          </div>
+        </section>
+
+        <section className="card p-6">
+          <h2 className="mb-1 font-semibold">Product dropdowns (per-product dynamic)</h2>
+          <p className="mb-5 text-sm text-ink/60">These become accordions on the product page: Description uses the main description above, plus these three optional sections. Leave empty to hide.</p>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="addInfo" className="label">Additional information</label>
+              <textarea id="addInfo" rows={4} maxLength={5000} value={additionalInfo} onChange={(e) => setAdditionalInfo(e.target.value)} className="input resize-y" placeholder="Care, dimensions, materials… shown in 'Additional information' dropdown" />
+            </div>
+            <div>
+              <label htmlFor="shipPolicy" className="label">Shipping &amp; Return Policy</label>
+              <textarea id="shipPolicy" rows={4} maxLength={3000} value={shippingPolicy} onChange={(e) => setShippingPolicy(e.target.value)} className="input resize-y" placeholder="Leave empty to use site default: Free over EGP… / 14 days, no questions asked" />
+            </div>
+            <div>
+              <label htmlFor="specs" className="label">Product Specifications</label>
+              <textarea id="specs" rows={4} maxLength={5000} value={specifications} onChange={(e) => setSpecifications(e.target.value)} className="input resize-y" placeholder="Dimensions, weight, finish, SKU…" />
             </div>
           </div>
         </section>

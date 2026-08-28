@@ -15,6 +15,9 @@ export const colorSchema = z.object({
 export const productSchema = z.object({
   name: z.string().trim().min(2).max(150),
   description: z.string().trim().min(10).max(5000),
+  additionalInfo: z.string().trim().max(5000).nullable().optional().or(z.literal("").transform(() => null)),
+  shippingPolicy: z.string().trim().max(3000).nullable().optional().or(z.literal("").transform(() => null)),
+  specifications: z.string().trim().max(5000).nullable().optional().or(z.literal("").transform(() => null)),
   price: z.number().positive().max(10000000),
   comparePrice: z.number().positive().max(10000000).nullable().optional(),
   stock: z.number().int().min(0).max(1000000),

@@ -2,14 +2,14 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
 import { productArt } from "@/lib/art";
-import { getSiteSettings, getHomeContent, getSlides, getCustomBanner } from "@/lib/settings";
+import { getSiteSettings, getHomeContent, getSlides, getCustomBanner, getSectionTitles } from "@/lib/settings";
 import NewsletterForm from "./newsletter-form";
 import HeroSlideshow from "./hero-slideshow";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [featured, categories, newArrivals, settings, home, slides, banner] = await Promise.all([
+  const [featured, categories, newArrivals, settings, home, slides, banner, titles] = await Promise.all([
     db.product.findMany({
       where: { published: true, featured: true },
       include: { colors: true, images: { orderBy: { sort: "asc" }, take: 1 } },
@@ -31,6 +31,7 @@ export default async function HomePage() {
     getHomeContent(),
     getSlides(),
     getCustomBanner(),
+    getSectionTitles(),
   ]);
 
   const ratings = await db.review.groupBy({
@@ -117,7 +118,7 @@ export default async function HomePage() {
       {/* Categories */}
       <section className="container-page py-14">
         <div className="mb-8 flex items-end justify-between">
-          <h2 className="section-title">Shop by room &amp; mood</h2>
+          <h2 className="section-title">{titles.shopByRoom}</h2>
           <Link href="/shop" className="text-sm font-semibold text-clay hover:underline">
             View all →
           </Link>
@@ -163,7 +164,7 @@ export default async function HomePage() {
         <section className="border-y border-ink/10 bg-white/60 py-14">
           <div className="container-page">
             <div className="mb-8 flex items-end justify-between">
-              <h2 className="section-title">Featured favorites</h2>
+              <h2 className="section-title">{titles.featuredFavorites}</h2>
               <Link href="/shop" className="text-sm font-semibold text-clay hover:underline">
                 Shop all →
               </Link>
@@ -176,23 +177,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* Value props */}
-      <section className="container-page grid gap-6 py-14 sm:grid-cols-3">
-        {[
-          ["Free shipping", `On every order over EGP ${settings.freeShippingThreshold.toLocaleString()}, delivered to your door.`],
-          ["Cash on delivery", "Pay only when your order arrives, across Egypt."],
-          [`${settings.returnsDays}-day returns`, settings.returnsNote + "."],
-        ].map(([title, desc]) => (
-          <div key={title} className="rounded-xl2 bg-white p-6 shadow-card">
-            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-clay/10">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4552D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <h3 className="font-semibold text-ink">{title}</h3>
-            <p className="mt-1 text-sm text-ink/60">{desc}</p>
-          </div>
-        ))}
-      </section>
 
       {/* New arrivals */}
       <section className="container-page pb-6 pt-4">

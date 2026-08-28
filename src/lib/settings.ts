@@ -187,6 +187,40 @@ export async function saveCustomBanner(next: CustomBanner): Promise<void> {
   });
 }
 
+export type SectionTitles = {
+  shopByRoom: string;
+  featuredFavorites: string;
+};
+
+export const DEFAULT_SECTION_TITLES: SectionTitles = {
+  shopByRoom: "Shop by room & mood",
+  featuredFavorites: "Featured favorites",
+};
+
+const SECTION_TITLES_KEY = "sectionTitles";
+
+export async function getSectionTitles(): Promise<SectionTitles> {
+  try {
+    const row = await db.setting.findUnique({ where: { key: SECTION_TITLES_KEY } });
+    if (!row) return DEFAULT_SECTION_TITLES;
+    const parsed = JSON.parse(row.value) as Partial<SectionTitles>;
+    return {
+      shopByRoom: parsed.shopByRoom?.trim() || DEFAULT_SECTION_TITLES.shopByRoom,
+      featuredFavorites: parsed.featuredFavorites?.trim() || DEFAULT_SECTION_TITLES.featuredFavorites,
+    };
+  } catch {
+    return DEFAULT_SECTION_TITLES;
+  }
+}
+
+export async function saveSectionTitles(next: SectionTitles): Promise<void> {
+  await db.setting.upsert({
+    where: { key: SECTION_TITLES_KEY },
+    update: { value: JSON.stringify(next) },
+    create: { key: SECTION_TITLES_KEY, value: JSON.stringify(next) },
+  });
+}
+
 export async function getSiteSettings(): Promise<ShippingSettings> {
   try {
     const row = await db.setting.findUnique({ where: { key: KEY } });

@@ -56,6 +56,9 @@ export async function PUT(req: Request, { params }: Params) {
         data: {
           name: d.name,
           description: d.description,
+          additionalInfo: d.additionalInfo ?? null,
+          shippingPolicy: d.shippingPolicy ?? null,
+          specifications: d.specifications ?? null,
           price: d.price,
           comparePrice: d.comparePrice ?? null,
           stock: d.stock,

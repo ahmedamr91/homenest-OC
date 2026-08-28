@@ -18,18 +18,21 @@ model Category {
 }
 
 model Product {
-  id           Int            @id @default(autoincrement())
-  name         String
-  slug         String         @unique
-  description  String
-  price        Float
-  comparePrice Float?
-  stock        Int            @default(0)
-  featured     Boolean        @default(false)
-  published    Boolean        @default(true)
-  returnDays   Int?
-  imageUrl     String?
-  categoryId   Int
+  id               Int            @id @default(autoincrement())
+  name             String
+  slug             String         @unique
+  description      String
+  additionalInfo   String?
+  shippingPolicy   String?
+  specifications   String?
+  price            Float
+  comparePrice     Float?
+  stock            Int            @default(0)
+  featured         Boolean        @default(false)
+  published        Boolean        @default(true)
+  returnDays       Int?
+  imageUrl         String?
+  categoryId       Int
   category     Category       @relation(fields: [categoryId], references: [id])
   colors       ProductColor[]
   images       ProductImage[]

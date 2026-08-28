@@ -14,6 +14,9 @@ export default async function NewProductPage() {
         initial={{
           name: "",
           description: "",
+          additionalInfo: null,
+          shippingPolicy: null,
+          specifications: null,
           price: 0,
           comparePrice: null,
           stock: 0,

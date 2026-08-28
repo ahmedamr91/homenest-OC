@@ -17,8 +17,8 @@ const config: Config = {
         moss: "#5B6650",
       },
       fontFamily: {
-        display: ["ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
-        body: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        display: ["Pola Perca", "ui-serif", "Georgia", "Cambria", "serif"],
+        body: ["HelveticaNeue", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
       },
       boxShadow: {
         card: "0 1px 3px rgba(34,27,21,0.06), 0 8px 24px rgba(34,27,21,0.06)",

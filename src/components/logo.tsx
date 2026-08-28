@@ -6,12 +6,19 @@ export default function Logo({
   dark = false,
   compact = false,
   height,
+  yellow = false,
 }: {
   dark?: boolean;
   compact?: boolean;
   height?: number;
+  yellow?: boolean;
 }) {
   const finalHeight = height ?? (compact ? 30 : 40);
+  const src = yellow
+    ? "/brand-logo-yellow.png"
+    : dark
+      ? "/brand-logo-cream.png"
+      : "/brand-logo.png";
   return (
     <Link
       href="/"
@@ -19,12 +26,7 @@ export default function Logo({
       aria-label="Empty Corner — home"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={dark ? "/brand-logo-cream.png" : "/brand-logo.png"}
-        alt="Empty Corner"
-        className="w-auto"
-        style={{ height: finalHeight }}
-      />
+      <img src={src} alt="Empty Corner" className="w-auto" style={{ height: finalHeight }} />
     </Link>
   );
 }
