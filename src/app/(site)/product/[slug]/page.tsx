@@ -102,7 +102,7 @@ export default async function ProductPage({
             price: product.price,
             stock: product.stock,
             imageUrl: product.imageUrl,
-            images: product.images.map((i) => ({ id: i.id, url: i.url })),
+            images: product.images.map((i) => ({ id: i.id, url: i.url, colorHex: (i as { colorHex?: string | null }).colorHex ?? null })),
             colors: product.colors.map((c) => ({ id: c.id, name: c.name, hex: c.hex })),
           }}
         />

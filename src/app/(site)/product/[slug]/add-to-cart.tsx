@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart-context";
 import { productArt } from "@/lib/art";
@@ -14,7 +14,7 @@ type Props = {
     price: number;
     stock: number;
     imageUrl: string | null;
-    images: { id: number; url: string }[];
+    images: { id: number; url: string; colorHex: string | null }[];
     colors: Color[];
   };
 };
@@ -40,6 +40,14 @@ export default function AddToCart({ product }: Props) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
+
+  // when color changes, auto-select matching image by colorHex
+  useEffect(() => {
+    const idx = product.images.findIndex(
+      (im) => im.colorHex && im.colorHex.toLowerCase() === selectedColor.hex.toLowerCase()
+    );
+    if (idx !== -1) setActiveImg(idx);
+  }, [selectedColor.hex, product.images]);
 
   const hasPhotos = product.images.length > 0;
   const tintedArt = productArt([selectedColor.hex], product.id);

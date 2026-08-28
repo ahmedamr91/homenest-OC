@@ -48,7 +48,7 @@ export default async function EditProductPage({
             name: c.name,
             hex: c.hex,
           })),
-          images: product.images.map((i) => i.url),
+          images: product.images.map((i) => ({ url: i.url, colorHex: (i as { colorHex?: string | null }).colorHex ?? null })),
         }}
       />
     </div>

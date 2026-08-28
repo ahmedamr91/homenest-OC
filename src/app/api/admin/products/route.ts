@@ -54,7 +54,7 @@ export async function POST(req: Request) {
         imageUrl: d.imageUrl ?? null,
         categoryId: d.categoryId,
         colors: { create: d.colors },
-        images: { create: d.images.map((url, i) => ({ url, sort: i })) },
+        images: { create: d.images.map((img, i) => ({ url: (img as { url: string }).url, colorHex: (img as { colorHex: string | null }).colorHex ?? null, sort: i })) },
       },
       include: { colors: true, images: true },
     });

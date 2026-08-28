@@ -36,7 +36,20 @@ export const productSchema = z.object({
   colors: z.array(colorSchema).max(12).default([]),
   images: z
     .array(
-      z.string().trim().url().max(1000)
+      z.union([
+        z.string().trim().url().max(1000).transform((v) => ({ url: v, colorHex: null as string | null })),
+        z.object({
+          url: z.string().trim().url().max(1000),
+          colorHex: z
+            .string()
+            .trim()
+            .regex(HEX_RE, "Invalid color hex")
+            .nullable()
+            .optional()
+            .or(z.literal("").transform(() => null))
+            .transform((v) => (v as string | null) ?? null),
+        }),
+      ])
     )
     .max(8)
     .default([]),
