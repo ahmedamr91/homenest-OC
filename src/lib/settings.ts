@@ -221,6 +221,37 @@ export async function saveSectionTitles(next: SectionTitles): Promise<void> {
   });
 }
 
+export type AnnouncementBar = {
+  text: string;
+};
+
+export const DEFAULT_ANNOUNCEMENT_BAR: AnnouncementBar = {
+  text: "Free shipping on orders over EGP 5,000 · Cash on delivery across Egypt",
+};
+
+const ANNOUNCEMENT_KEY = "announcementBar";
+
+export async function getAnnouncementBar(): Promise<AnnouncementBar> {
+  try {
+    const row = await db.setting.findUnique({ where: { key: ANNOUNCEMENT_KEY } });
+    if (!row) return DEFAULT_ANNOUNCEMENT_BAR;
+    const parsed = JSON.parse(row.value) as Partial<AnnouncementBar>;
+    return {
+      text: parsed.text?.trim() || DEFAULT_ANNOUNCEMENT_BAR.text,
+    };
+  } catch {
+    return DEFAULT_ANNOUNCEMENT_BAR;
+  }
+}
+
+export async function saveAnnouncementBar(next: AnnouncementBar): Promise<void> {
+  await db.setting.upsert({
+    where: { key: ANNOUNCEMENT_KEY },
+    update: { value: JSON.stringify(next) },
+    create: { key: ANNOUNCEMENT_KEY, value: JSON.stringify(next) },
+  });
+}
+
 export async function getSiteSettings(): Promise<ShippingSettings> {
   try {
     const row = await db.setting.findUnique({ where: { key: KEY } });

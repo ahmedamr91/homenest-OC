@@ -19,8 +19,10 @@ type NavCategory = { name: string; slug: string };
 
 export default function Header({
   freeThreshold = 3000,
+  announcementText,
 }: {
   freeThreshold?: number;
+  announcementText?: string;
   categories?: NavCategory[];
 }) {
   const pathname = usePathname();
@@ -35,10 +37,11 @@ export default function Header({
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  const barText = announcementText?.trim() || `Free shipping on orders over EGP ${freeThreshold.toLocaleString()} · Cash on delivery across Egypt`;
   return (
     <>
       <div className="bg-[#9B1B1B] text-center text-[11px] sm:text-xs tracking-widest uppercase text-[#FFCB27]/90 py-2 px-4">
-        Free shipping on orders over EGP {freeThreshold.toLocaleString()} · Cash on delivery across Egypt
+        {barText}
       </div>
       <header className="sticky top-0 z-40 border-b border-[#9B1B1B] bg-[#D22928] backdrop-blur">
         <div className="container-page flex h-20 items-center justify-between gap-4">

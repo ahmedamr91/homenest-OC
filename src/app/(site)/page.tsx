@@ -3,7 +3,6 @@ import { db } from "@/lib/db";
 import ProductCard from "@/components/product-card";
 import { productArt } from "@/lib/art";
 import { getSiteSettings, getHomeContent, getSlides, getCustomBanner, getSectionTitles } from "@/lib/settings";
-import NewsletterForm from "./newsletter-form";
 import HeroSlideshow from "./hero-slideshow";
 
 export const revalidate = 60;
@@ -245,18 +244,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="container-page py-16">
-        <div className="rounded-xl2 bg-ink px-6 py-12 text-center sm:px-12">
-          <h2 className="font-display text-3xl text-cream sm:text-4xl">
-            Get 10% off your first order
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-cream/70">
-            Join our list for early access to new collections and color drops.
-          </p>
-          <NewsletterForm />
-        </div>
-      </section>
     </div>
   );
 }
