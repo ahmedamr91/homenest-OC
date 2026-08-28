@@ -67,14 +67,13 @@ export default function CustomBannerEditor({
         <h2 className="font-semibold">Custom orders banner</h2>
       </div>
       <p className="mb-5 text-sm text-ink/60">
-        Full-width strip under the product rows. Layer 1 is a background photo
-        (optional), layer 2 is the text + the fixed clay button on the right.
-        Best with wide images (1920×640 or similar).
+        Premium full-width strip — now shorter & cinematic (380–440px tall).
+        Best with wide images (2400×700, 21:9). Left text + right clay button.
       </p>
 
       <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
         <div>
-          <div className="relative aspect-[3/1] overflow-hidden rounded-lg border border-ink/10 bg-ink">
+          <div className="relative aspect-[21/9] overflow-hidden rounded-lg border border-ink/10 bg-ink">
             {banner.imageUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={banner.imageUrl} alt="Banner background" className="h-full w-full object-cover" />
@@ -83,6 +82,7 @@ export default function CustomBannerEditor({
                 No photo — plain dark banner
               </div>
             )}
+            <div className="absolute inset-0 bg-gradient-to-r from-ink/80 to-ink/10" />
           </div>
           <label className="mt-2 flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-ink/20 py-2 text-xs font-semibold text-ink/60 transition hover:border-clay hover:text-clay">
             {uploading ? "Uploading…" : banner.imageUrl ? "Replace photo" : "Upload photo"}

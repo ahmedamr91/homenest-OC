@@ -209,46 +209,53 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Custom orders banner — full-width, 3:1, photo layer + fixed button layer */}
+      {/* Custom orders banner — premium cinematic ratio */}
       <section className="relative w-full overflow-hidden bg-ink">
-        <div className="relative h-[240px] w-full md:aspect-[3/1] md:h-auto md:max-h-[420px]">
-          {banner.imageUrl && (
+        <div className="relative h-[420px] sm:h-[380px] lg:h-[440px] w-full">
+          {banner.imageUrl ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={banner.imageUrl}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover object-center"
             />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink to-[#2a1e16]" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/70 to-ink/40" />
+          {/* Premium overlay — softer, more depth */}
+          <div className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/75 to-ink/30 sm:via-ink/60 sm:to-ink/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
+          {/* subtle top hairline */}
+          <div className="absolute inset-x-0 top-0 h-px bg-white/10" />
 
-          <div className="container-page relative flex h-full flex-col items-start justify-center gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
-            <div>
+          <div className="container-page relative flex h-full flex-col justify-center gap-7 py-10 sm:py-0 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-[620px]">
               {banner.badge && (
-                <p className="mb-3 inline-block rounded-full bg-clay px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
+                <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-cream backdrop-blur-sm">
+                  <span className="h-1.5 w-1.5 rounded-full bg-clay" />
                   {banner.badge}
                 </p>
               )}
-              <h2 className="font-display text-3xl leading-snug text-cream sm:text-4xl">
+              <h2 className="font-display text-[30px] leading-[1.05] tracking-tight text-cream sm:text-[38px] lg:text-[42px]">
                 {banner.headlineStart}{" "}
                 {banner.headlineAccent && (
-                  <span className="italic text-clay-light">
+                  <span className="font-display italic font-light text-clay-light">
                     {banner.headlineAccent}
                   </span>
                 )}
               </h2>
               {banner.subtext && (
-                <p className="mt-3 max-w-lg text-sm leading-relaxed text-cream/70">
+                <p className="mt-4 max-w-xl text-[14px] leading-relaxed text-cream/70 sm:text-[15px]">
                   {banner.subtext}
                 </p>
               )}
             </div>
             <Link
               href={banner.href}
-              className="btn-primary shrink-0 !bg-clay hover:!bg-clay-dark"
+              className="group inline-flex shrink-0 items-center gap-3 rounded-full bg-clay px-8 py-4 text-sm font-bold tracking-wide text-white shadow-[0_8px_24px_rgba(180,85,45,0.35)] transition hover:bg-clay-dark hover:shadow-[0_12px_32px_rgba(180,85,45,0.45)] hover:-translate-y-0.5"
             >
               {banner.buttonText}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </Link>
           </div>
         </div>

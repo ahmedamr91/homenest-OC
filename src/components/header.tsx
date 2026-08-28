@@ -62,6 +62,12 @@ export default function Header({
 
           <div className="flex items-center gap-2">
             <Link
+              href="/custom"
+              className="inline-flex items-center rounded-full bg-clay/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-clay transition hover:bg-clay hover:text-white sm:px-4 sm:py-2 sm:text-xs"
+            >
+              Make it yours
+            </Link>
+            <Link
               href="/cart"
               aria-label="Cart"
               className="relative rounded-full p-2.5 text-ink transition hover:bg-sand"

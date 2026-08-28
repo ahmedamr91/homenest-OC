@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="Pendant lamps">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Pendant lamps">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#2E2318"/>
       <stop offset="1" stop-color="#191310"/>
     </linearGradient>
-    <radialGradient id="halo" cx="0.5" cy="0.2" r="0.8">
+    <radialGradient id="halo" cx="0.5" cy="0.25" r="0.8">
       <stop offset="0" stop-color="#B4552D" stop-opacity="0.5"/>
       <stop offset="0.55" stop-color="#B4552D" stop-opacity="0.15"/>
       <stop offset="1" stop-color="#B4552D" stop-opacity="0"/>
@@ -24,36 +24,36 @@
     </linearGradient>
   </defs>
 
-  <rect width="1600" height="700" fill="url(#bg)"/>
-  <rect width="1600" height="700" fill="url(#halo)"/>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#halo)"/>
 
   <g stroke="#4A3A2A" stroke-width="3">
-    <line x1="540" y1="0" x2="540" y2="230"/>
-    <line x1="800" y1="0" x2="800" y2="180"/>
-    <line x1="1060" y1="0" x2="1060" y2="260"/>
+    <line x1="540" y1="0" x2="540" y2="260"/>
+    <line x1="800" y1="0" x2="800" y2="200"/>
+    <line x1="1060" y1="0" x2="1060" y2="300"/>
   </g>
   <g>
-    <path d="M485 230 a55 48 0 0 1 110 0 Z" fill="url(#shade)"/>
-    <circle cx="540" cy="248" r="46" fill="url(#bulb)"/>
-    <circle cx="540" cy="242" r="10" fill="#FFE8C2"/>
+    <path d="M485 260 a55 48 0 0 1 110 0 Z" fill="url(#shade)"/>
+    <circle cx="540" cy="278" r="46" fill="url(#bulb)"/>
+    <circle cx="540" cy="272" r="10" fill="#FFE8C2"/>
   </g>
   <g>
-    <path d="M730 180 a70 60 0 0 1 140 0 Z" fill="url(#shade2)"/>
-    <circle cx="800" cy="204" r="60" fill="url(#bulb)"/>
-    <circle cx="800" cy="196" r="13" fill="#FFE8C2"/>
+    <path d="M730 200 a70 60 0 0 1 140 0 Z" fill="url(#shade2)"/>
+    <circle cx="800" cy="224" r="60" fill="url(#bulb)"/>
+    <circle cx="800" cy="216" r="13" fill="#FFE8C2"/>
   </g>
   <g>
-    <path d="M1010 260 a50 44 0 0 1 100 0 Z" fill="url(#shade)"/>
-    <circle cx="1060" cy="276" r="42" fill="url(#bulb)"/>
-    <circle cx="1060" cy="271" r="9" fill="#FFE8C2"/>
+    <path d="M1010 300 a50 44 0 0 1 100 0 Z" fill="url(#shade)"/>
+    <circle cx="1060" cy="316" r="42" fill="url(#bulb)"/>
+    <circle cx="1060" cy="311" r="9" fill="#FFE8C2"/>
   </g>
 
   <g fill="#FFC98A">
-    <circle cx="360" cy="330" r="3" opacity="0.5"/>
-    <circle cx="1260" cy="300" r="4" opacity="0.4"/>
-    <circle cx="1360" cy="480" r="2.5" opacity="0.5"/>
-    <circle cx="260" cy="520" r="2.5" opacity="0.35"/>
-    <circle cx="1180" cy="560" r="3" opacity="0.4"/>
-    <circle cx="430" cy="600" r="2.5" opacity="0.3"/>
+    <circle cx="360" cy="480" r="3" opacity="0.5"/>
+    <circle cx="1260" cy="450" r="4" opacity="0.4"/>
+    <circle cx="1370" cy="640" r="2.5" opacity="0.5"/>
+    <circle cx="250" cy="700" r="2.5" opacity="0.35"/>
+    <circle cx="1180" cy="760" r="3" opacity="0.4"/>
+    <circle cx="430" cy="800" r="2.5" opacity="0.3"/>
   </g>
 </svg>

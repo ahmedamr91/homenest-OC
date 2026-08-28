@@ -94,7 +94,7 @@ export default function SlidesEditor({
         <span className="text-xs text-ink/50">{slides.length}/6 slides</span>
       </div>
       <p className="mb-5 text-sm text-ink/60">
-        Full-width rotating banners. Use wide landscape images (1600×700 or
+        Full-width rotating banners. Use wide 16:9 landscape images (1600×900 or
         similar). When at least one slide exists it replaces the hero text
         section; delete all slides to bring it back.
       </p>
